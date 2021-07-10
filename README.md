@@ -3,6 +3,7 @@
 Componentes:
 
 - Vinicius Rodrigues Pacheco de Lima
+- Luan Carvalho Pedrosa
 
 ## Running
 
