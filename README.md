@@ -4,6 +4,7 @@ Componentes:
 
 - Vinicius Rodrigues Pacheco de Lima
 - Luan Carvalho Pedrosa
+- Hiago Willyam Araújo Lacerda
 
 ## Running
 
