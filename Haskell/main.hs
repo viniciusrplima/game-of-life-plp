@@ -1,5 +1,7 @@
 
 import Text.Printf
+import System.IO
+import Control.Concurrent
 
 -- matriz inicial do sistema
 initialMatrix :: [String]
@@ -12,9 +14,6 @@ initialMatrix = [
   "00000000000000000000",
   "00000000000000000000",
   "00000000000000000000",
-  "00000001010100000000",
-  "00000010101010000000",
-  "00000001010100000000",
   "00000000000000000000",
   "00000000000000000000",
   "00000000000000000000",
@@ -24,21 +23,89 @@ initialMatrix = [
   "00000000000000000000",
   "00000000000000000000",
   "00000000000000000000",
+  "00010000000000000000",
+  "00011000000000000000",
+  "00101000000000000000",
   "00000000000000000000"]
 
--- representacao das celulas em String
--- repare que tem dois caracteres cada para ficar melhor na tela
 deadCellChar = "  "
 liveCellChar = "██"
+surfaceCellChar = "▒▒"
 
--- os valores possiveis da celula na matriz
 deadCell = '0'
 liveCell = '1'
+surfaceCell = '2'
 
 -- converte uma celula da matriz em uma String
 convertToCell :: Char -> [Char]
-convertToCell '1' = liveCellChar -- se 1 retorna liveCell
-convertToCell x = deadCellChar   -- senao retorna deadCell
+convertToCell '1' = liveCellChar
+convertToCell '2' = surfaceCellChar
+convertToCell x = deadCellChar
+
+------------------------------------------------------------------------
+    --  Print Utils
+    -------------------------------------------------------------------
+
+createStrRow :: Int -> [Char] -> [Char]
+createStrRow 0 c = ""
+createStrRow w c = c ++ createStrRow (pred w) c
+
+createStrMatrix :: Int -> Int -> [Char] -> [[Char]]
+createStrMatrix w 0 c = []
+createStrMatrix w h c = (createStrRow w c) : (createStrMatrix w (pred h) c)
+
+termScale = 2
+
+initialStrMatrix :: [[Char]]
+initialStrMatrix = createStrMatrix 20 20 "  "
+
+toStrCell :: Char -> [Char] -> [Char]
+toStrCell '1' c = c
+toStrCell x c = deadCellChar
+
+printIntoStrRow :: [Char] -> [Char] -> [Char] -> [Char]
+printIntoStrRow [] [] c = ""
+printIntoStrRow (first:cellRow) line c = do
+    let symbol = take termScale line
+    if first == deadCell
+       then symbol ++ printIntoStrRow cellRow (drop termScale line) c
+       else (toStrCell first c) ++ printIntoStrRow cellRow (drop termScale line) c
+
+printIntoStrMatrix :: [[Char]] -> [[Char]] -> [Char] -> [[Char]]
+printIntoStrMatrix [] targetMap c = []
+printIntoStrMatrix cellMap [] c = []
+printIntoStrMatrix (first:cellMap) (line:targetMap) c = do
+    (printIntoStrRow first line c) : printIntoStrMatrix cellMap targetMap c
+
+printStrMatrix :: [[Char]] -> IO()
+printStrMatrix [] = putStrLn ""
+printStrMatrix (line:targetMap) = do
+    putStrLn line
+    printStrMatrix targetMap
+
+------------------------------------------------------------------------
+    --------------------------------------------------------------------
+
+------------------------------------------------------------------------
+    --  Cell Map Matrix Utils
+    --------------------------------------------------------------------
+
+rowUnion :: [Char] -> [Char] -> [Char]
+rowUnion rowA "" = ""
+rowUnion "" rowB = ""
+rowUnion (cellA:rowA) (cellB:rowB) = do
+    if (cellA == '1' || cellB == '1')
+       then '1' : rowUnion rowA rowB
+       else '0' : rowUnion rowA rowB
+
+matrixUnion :: [[Char]] -> [[Char]] -> [[Char]]
+matrixUnion [] matB = []
+matrixUnion matA [] = []
+matrixUnion (rowA:matA) (rowB:matB) = (rowUnion rowA rowB) : (matrixUnion matA matB)
+
+
+--------------------------------------------------------------------------
+    ----------------------------------------------------------------------
 
 -- converte um array em uma String
 arrayToStr :: [Char] -> [Char]
@@ -47,7 +114,7 @@ arrayToStr (cell:rest) = convertToCell cell ++ arrayToStr rest
 
 -- converte matriz em uma String
 matrixToStr :: [[Char]] -> [Char]
-matrixToStr [] = "" 
+matrixToStr [] = ""
 matrixToStr (row:rest) = arrayToStr row ++ "\n" ++ matrixToStr rest
 
 -- imprime uma matrix na tela
@@ -66,9 +133,12 @@ isValidPosition matrix row col = do
 -- se estiver morta ou esta for uma posicao invalida retorna 0
 countLive :: Num p => [[Char]] -> Int -> Int -> p
 countLive matrix row col = do
-  if isValidPosition matrix row col && (matrix!!row)!!col == liveCell
-     then 1
-     else 0
+    let rowNorm = (row + length matrix) `mod` (length matrix)
+    let colNorm = (col + length (matrix!!0)) `mod` (length (matrix!!0))
+    if ((matrix!!rowNorm)!!colNorm == liveCell) 
+       then 1 
+       else 0
+
 
 -- conta o numero total de vizinhos de uma celula
 countNeighbors :: Num a => [[Char]] -> Int -> Int -> a
@@ -114,19 +184,25 @@ updateMatrix :: [[Char]] -> [[Char]]
 updateMatrix matrix = updateMatrixRecursive matrix 0
 
 -- laco principal do programa
-mainLoop :: [String] -> Integer -> IO()
-mainLoop previousMatrix generation = do
+mainLoop :: [[Char]] -> [[Char]] -> Integer -> IO()
+mainLoop currentMatrix previousMatrix generation = do
 
-  -- imprime a tela
+  -- print screen
   printf "Generation %d" generation
-  printMatrix previousMatrix
+  let surfaceMatrix = printIntoStrMatrix previousMatrix initialStrMatrix surfaceCellChar
+  let finalMatrix = printIntoStrMatrix currentMatrix surfaceMatrix liveCellChar
+  printStrMatrix finalMatrix
 
-  -- espera a tecla enter ser apertada
-  getLine
+  -- wait until press enter
+  -- hSetBuffering stdin NoBuffering
+  --getChar
+  --hSetBuffering stdin LineBuffering
 
-  -- chamada recursiva para entrar em loop
-  mainLoop (updateMatrix previousMatrix) (succ generation)
+  threadDelay 200000
+
+  -- chamada recursiva
+  mainLoop (updateMatrix currentMatrix) (matrixUnion currentMatrix previousMatrix) (succ generation)
 
 main :: IO()
-main = mainLoop initialMatrix 1
+main = mainLoop initialMatrix initialMatrix 1
 
