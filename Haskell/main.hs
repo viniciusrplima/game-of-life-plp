@@ -2,31 +2,35 @@
 import Text.Printf
 import System.IO
 import Control.Concurrent
+import qualified Screen as Screen
 
 -- matriz inicial do sistema
 initialMatrix :: [String]
 initialMatrix = [
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00000000000000000000",
-  "00010000000000000000",
-  "00011000000000000000",
-  "00101000000000000000",
-  "00000000000000000000"]
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000000000000000000",
+  "000100000000001000000001000000001000001000001000001000",
+  "000110000000001100000001100000001100001100001100001100",
+  "001010000000010100000010100000010100010100010100010100",
+  "000000000000000000000000000000000000000000000000000000"]
 
 deadCellChar = "  "
 liveCellChar = "██"
@@ -57,7 +61,7 @@ createStrMatrix w h c = (createStrRow w c) : (createStrMatrix w (pred h) c)
 termScale = 2
 
 initialStrMatrix :: [[Char]]
-initialStrMatrix = createStrMatrix 20 20 "  "
+initialStrMatrix = createStrMatrix (length (initialMatrix!!0)) (length initialMatrix) "  "
 
 toStrCell :: Char -> [Char] -> [Char]
 toStrCell '1' c = c
@@ -77,11 +81,12 @@ printIntoStrMatrix cellMap [] c = []
 printIntoStrMatrix (first:cellMap) (line:targetMap) c = do
     (printIntoStrRow first line c) : printIntoStrMatrix cellMap targetMap c
 
+concatenateMatrix :: [[Char]] -> [Char]
+concatenateMatrix [] = ""
+concatenateMatrix (row:matrix) = row ++ "\n" ++ concatenateMatrix matrix
+
 printStrMatrix :: [[Char]] -> IO()
-printStrMatrix [] = putStrLn ""
-printStrMatrix (line:targetMap) = do
-    putStrLn line
-    printStrMatrix targetMap
+printStrMatrix matrix = putStrLn (Screen.colorizeString (concatenateMatrix matrix) "blue")
 
 ------------------------------------------------------------------------
     --------------------------------------------------------------------
@@ -188,17 +193,20 @@ mainLoop :: [[Char]] -> [[Char]] -> Integer -> IO()
 mainLoop currentMatrix previousMatrix generation = do
 
   -- print screen
-  printf "Generation %d" generation
+  printf "Generation %d\n" generation
   let surfaceMatrix = printIntoStrMatrix previousMatrix initialStrMatrix surfaceCellChar
   let finalMatrix = printIntoStrMatrix currentMatrix surfaceMatrix liveCellChar
+
+  hSetBuffering stdout (BlockBuffering Nothing)
   printStrMatrix finalMatrix
+  hSetBuffering stdout LineBuffering
 
   -- wait until press enter
   -- hSetBuffering stdin NoBuffering
   --getChar
   --hSetBuffering stdin LineBuffering
 
-  threadDelay 200000
+  threadDelay 30000
 
   -- chamada recursiva
   mainLoop (updateMatrix currentMatrix) (matrixUnion currentMatrix previousMatrix) (succ generation)
