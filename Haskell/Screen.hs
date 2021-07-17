@@ -1,6 +1,7 @@
 module Screen where
 
 import Text.Printf
+import System.IO
 
 -- cria uma matrix de strings que serve como buffer para
 -- imprimir na tela
@@ -14,10 +15,18 @@ createScreenRowBuf :: Integer -> Char -> [Char]
 createScreenRowBuf 0 _ = ""
 createScreenRowBuf width c = c : createScreenRowBuf (pred width) c
 
--- renderiza um buffer na tela
+-- renderiza um buffer na tela utilizando
+-- buffer na saída do terminal
 printScreen :: [[Char]] -> IO()
-printScreen [] = putStrLn ""
-printScreen (row:buffer) = do 
+printScreen buffer = do
+    hSetBuffering stdout (BlockBuffering Nothing)
+    printScreenStd buffer
+    hSetBuffering stdout LineBuffering
+
+-- renderiza um buffer na tela
+printScreenStd :: [[Char]] -> IO()
+printScreenStd [] = putStrLn ""
+printScreenStd (row:buffer) = do 
     putStrLn row
     printScreen buffer
 
@@ -39,7 +48,6 @@ colorizeString text color = ("\x1b[" ++ (getColor color) ++ "m " ++ text ++ "\x1
 colorizeBuffer :: [[Char]] -> [Char] -> [[Char]]
 colorizeBuffer [] color = []
 colorizeBuffer (row:buffer) color = colorizeString row color : colorizeBuffer buffer color
-
 
 -- imprime buffer no buffer
 renderInBuffer :: [[Char]] -> [[Char]] -> Int -> Int -> [[Char]]
