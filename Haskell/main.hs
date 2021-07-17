@@ -30,7 +30,7 @@ initialMatrix = [
 
 deadCellChar = "  "
 liveCellChar = "██"
-surfaceCellChar = "▒▒"
+surfaceCellChar = "░░"
 
 deadCell = '0'
 liveCell = '1'
