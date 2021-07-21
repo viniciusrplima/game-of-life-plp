@@ -86,7 +86,7 @@ concatenateMatrix [] = ""
 concatenateMatrix (row:matrix) = row ++ "\n" ++ concatenateMatrix matrix
 
 printStrMatrix :: [[Char]] -> IO()
-printStrMatrix matrix = putStrLn (Screen.colorizeString (concatenateMatrix matrix) "blue")
+printStrMatrix matrix = putStrLn (Screen.colorizeString (concatenateMatrix matrix) "green")
 
 ------------------------------------------------------------------------
     --------------------------------------------------------------------

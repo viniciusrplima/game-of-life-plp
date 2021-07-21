@@ -39,6 +39,14 @@ getColor "yellow"   = "33"
 getColor "blue"     = "34"
 getColor "purple"   = "35"
 getColor "leaf"     = "36"
+getColor "bg-gray"  = "40"
+getColor "bg-red"   = "41"
+getColor "bg-green" = "42"
+getColor "bg-yellow"= "43"
+getColor "bg-blue"  = "44"
+getColor "bg-purple"= "45"
+getColor "bg-leaf"  = "46"
+getColor "bg-white" = "47"
 
 -- colore uma string
 colorizeString :: [Char] -> [Char] -> [Char]
