@@ -206,7 +206,7 @@ mainLoop currentMatrix previousMatrix generation = do
   --getChar
   --hSetBuffering stdin LineBuffering
 
-  threadDelay 30000
+  threadDelay 100000
 
   -- chamada recursiva
   mainLoop (updateMatrix currentMatrix) (matrixUnion currentMatrix previousMatrix) (succ generation)

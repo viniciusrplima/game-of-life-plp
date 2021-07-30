@@ -103,42 +103,59 @@ createBufferFromStringMatrix (row:source) step color = do
 --  PRINT SCREEN
 -- ****************************
 
+bufferToString :: [[IPixel]] -> [Char]
+bufferToString [] = ""
+bufferToString (row:buffer) = bufferRowToString row ++ bufferToString buffer
+
+bufferRowToString :: [IPixel] -> [Char]
+bufferRowToString [] = "\n"
+bufferRowToString ((Pixel content color):row)= do
+    colorizeStringByCode content color ++ bufferRowToString row
+
 -- renderiza um buffer na tela utilizando
 -- buffer na saída do terminal
 printScreen :: [[IPixel]] -> IO()
 printScreen buffer = do
     hSetBuffering stdout (BlockBuffering Nothing)
-    printScreenStd buffer
+    putStrLn $ bufferToString buffer
+    hFlush stdout
     hSetBuffering stdout LineBuffering
-
--- renderiza um buffer na tela
-printScreenStd :: [[IPixel]] -> IO()
-printScreenStd [] = putStrLn ""
-printScreenStd (row:buffer) = do 
-    printRowScreenStd row
-    printScreenStd buffer
-
-
--- renderiza uma linha do buffer na tela
-printRowScreenStd :: [IPixel] -> IO()
-printRowScreenStd [] = printf "\n"
-printRowScreenStd ((Pixel content color):row) = do
-    printf $ colorizeStringByCode content color
-    printRowScreenStd row
-
 
 -- ****************************
 --  TESTS
 -- ****************************
 
+myMenu = [
+    "-- GOL --", 
+    "1) Start   ", 
+    "2) Records ", 
+    "3) Quit    "]
 
-printMyBuffer = do
+createMenu :: [[Char]] -> Int -> [[Char]]
+createMenu [] i = []
+createMenu (row:menu) 0 = (row ++ "<--") : menu
+createMenu (row:menu) i = row : createMenu menu (pred i)
+
+printMyBuffer i = do
     let initial = createScreenBuffer 20 20 "  "
     let rect = createScreenBufferColored 15 10 "░░" "blue"
     let otherRect = createScreenBufferColored 15 10 "██" "blue"
     let tmp = renderInBuffer initial rect 2 2
     let tmp2 = renderInBuffer tmp otherRect 3 3
-    let menu = ["-- GOL --", "1) Start", "2) Records", "3) Quit"]
-    let menuBuffer = createBufferFromStringMatrix menu 2 "red"
-    let final = renderInBuffer tmp2 menuBuffer 4 4
+    let menu = createMenu myMenu i
+    let menuBuffer = createBufferFromStringMatrix menu 2 "bg-blue"
+    let final = renderInBuffer tmp2 menuBuffer 6 6 
+
     printScreen final
+
+    hSetBuffering stdin NoBuffering
+    command <- getChar 
+    hSetBuffering stdin LineBuffering
+
+    if (command == 'w') then do
+        let prevI = if i == 1 then 3 else (pred i)
+        printMyBuffer prevI
+    else do
+        let nextI = if i == 3 then 1 else (succ i)
+        printMyBuffer nextI
+
