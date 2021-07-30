@@ -1,6 +1,6 @@
 
 EXEC_FILE=game-of-life
-MAIN_FILE=main.hs
+MAIN_FILE=Main.hs
 
 default: *.hs
 	ghc $(MAIN_FILE) -o $(EXEC_FILE)
