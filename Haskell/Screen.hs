@@ -94,10 +94,11 @@ stringToBufferColor source step color  = do
 stringToBuffer :: [Char] -> Int -> [Char] -> [IPixel]
 stringToBuffer source step color = stringToBufferColor source step (getColor color)
 
+-- cria uma matrix de pixels a partir de uma lista de strings
 createBufferFromStringMatrix :: [[Char]] -> Int -> [Char] -> [[IPixel]]
 createBufferFromStringMatrix [] _ _ = []
-createBufferFromStringMatrix (row:source) step color = do
-    stringToBuffer row step color : createBufferFromStringMatrix source step color
+createBufferFromStringMatrix (row:source) pixelSize color = do
+    stringToBuffer row pixelSize color : createBufferFromStringMatrix source pixelSize color
 
 -- ****************************
 --  PRINT SCREEN

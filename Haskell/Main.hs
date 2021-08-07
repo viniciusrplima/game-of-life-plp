@@ -1,8 +1,10 @@
 
 import qualified Screen as Screen
+import qualified MatrixView as MatrixView
 import qualified Terminal
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
+import System.Exit
 import Control.Concurrent
 
 termSize = unsafeDupablePerformIO Terminal.getTermSize
@@ -86,8 +88,12 @@ mainLoop index = do
                                    's' -> ((succ index) + maxIndex) `mod` maxIndex
                                    cmd -> index
 
-    if command =='f' && index == 2 then putStrLn "QUIT" -- desistir da partida
-    else mainLoop newIndex                               -- continua no menu
+    if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
+    else if command == 'f' && index == 0 then MatrixView.printMatrixView termWidth termHeight -- iniciar jogo
+    else putStrLn ""       -- continua no menu
+
+    mainLoop newIndex
+
 
 main :: IO()
-main = mainLoop 1
+main = mainLoop 0
