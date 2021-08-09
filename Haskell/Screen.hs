@@ -3,6 +3,8 @@ module Screen where
 import Text.Printf
 import System.IO
 
+import qualified Gol
+
 --   Tipo     Construtor    Atributos
 data IPixel = Pixel         [Char] Int -- Content, Color
 -- criando novo objeto
@@ -123,6 +125,26 @@ printScreen buffer = do
     hSetBuffering stdout LineBuffering
 
 -- ****************************
+--  GOL UTILS
+-- ****************************
+
+matrixToBuffer :: [[Int]] -> [Char] -> [Char] -> [[IPixel]]
+matrixToBuffer matrix content color = matrixToBufferColored matrix content (getColor color)
+
+matrixToBufferColored :: [[Int]] -> [Char] -> Int -> [[IPixel]]
+matrixToBufferColored [] _ _ = []
+matrixToBufferColored (row:matrix) content color = matrixRowToBufferRow row content color : matrixToBufferColored matrix content color
+
+matrixRowToBufferRow :: [Int] -> [Char] -> Int -> [IPixel]
+matrixRowToBufferRow [] _ _ = []
+matrixRowToBufferRow (cell:row) content color = createPixelFromGolCell cell content color : matrixRowToBufferRow row content color
+
+createPixelFromGolCell :: Int -> [Char] -> Int -> IPixel
+createPixelFromGolCell cell content color
+    | cell == Gol.deadCell = Pixel (replicate (length content) ' ') color
+    | otherwise = Pixel content color
+
+-- ****************************
 --  TESTS
 -- ****************************
 
@@ -159,4 +181,3 @@ printMyBuffer i = do
     else do
         let nextI = if i == 3 then 1 else (succ i)
         printMyBuffer nextI
-
