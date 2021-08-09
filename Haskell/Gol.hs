@@ -1,6 +1,8 @@
 -- nucleo das regras do game of life
 module Gol where
 
+import Data.List
+
 -- ****************************
 --  MATRIX
 -- ****************************
@@ -76,3 +78,33 @@ updateMatrixRecursive matrix row = do
 advanceMatrix :: [[Int]] -> [[Int]]
 advanceMatrix matrix = updateMatrixRecursive matrix 0
 
+-- ****************************
+--  OPERATIONS
+-- ****************************
+
+-- junta duas matrizes em uma
+mergeMatrix :: [[Int]] -> [[Int]] -> Int -> Int -> [[Int]]
+mergeMatrix _ [] _ _ = []
+mergeMatrix [] target _ _ = target
+mergeMatrix (srow:source) (trow:target) 0 col = mergeMatrixRow srow trow col : mergeMatrix source target 0 col
+mergeMatrix source (trow:target) row col = trow : mergeMatrix source target (pred row) col
+
+mergeMatrixRow :: [Int] -> [Int] -> Int -> [Int]
+mergeMatrixRow _ [] _ = []
+mergeMatrixRow [] targetRow _ = targetRow
+mergeMatrixRow (scell:sourceRow) (tcell:targetRow) 0 = mergeCell scell tcell : mergeMatrixRow sourceRow targetRow 0
+mergeMatrixRow sourceRow (tcell:targetRow) col = tcell : mergeMatrixRow sourceRow targetRow (pred col)
+
+mergeCell :: Int -> Int -> Int
+mergeCell cellA cellB = do
+    if cellA == liveCell || cellB == liveCell 
+        then liveCell 
+        else deadCell
+
+-- rotaciona matriz para a esquerda
+rotateMatrixLeft :: [[Int]] -> [[Int]]
+rotateMatrixLeft = reverse . transpose
+
+-- rotaciona matriz para a direita
+rotateMatrixRight :: [[Int]] -> [[Int]]
+rotateMatrixRight = transpose . reverse
