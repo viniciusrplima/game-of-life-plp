@@ -124,6 +124,23 @@ printScreen buffer = do
     hFlush stdout
     hSetBuffering stdout LineBuffering
 
+bufferToStringPerformed :: [[IPixel]] -> [Char]
+bufferToStringPerformed [] = ""
+bufferToStringPerformed (row:buffer) = bufferRowToStringPerformed row ++ bufferToStringPerformed buffer
+
+bufferRowToStringPerformed :: [IPixel] -> [Char]
+bufferRowToStringPerformed [] = "\n"
+bufferRowToStringPerformed ((Pixel content color):row)= do
+    content ++ bufferRowToStringPerformed row
+
+-- aumenta a performance da impressao pois ignora as cores dos pixels
+printScreenPerformed :: [[IPixel]] -> [Char] -> IO()
+printScreenPerformed buffer color = do
+    hSetBuffering stdout (BlockBuffering Nothing)
+    putStrLn $ colorizeStringByCode (bufferToStringPerformed buffer) (getColor color)
+    hFlush stdout
+    hSetBuffering stdout LineBuffering
+
 -- ****************************
 --  GOL UTILS
 -- ****************************

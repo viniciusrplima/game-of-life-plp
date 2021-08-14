@@ -9,9 +9,8 @@ import Control.Concurrent
 
 -- constants
 pixelSize = 2
-menuColor = "bg-blue"
 matrixContent = '█'
-matrixColor = "bg-green"
+matrixColor = "white"
 
 -- cria um pixel, replicando uma letra n numero de vezes
 makePixel :: Char -> Int -> [Char]
@@ -21,44 +20,48 @@ menuOpcoes :: [[Char]]
 menuOpcoes = [
     " a - avanca                       ", 
     " s - selecionar padrao            ", 
+    " c - limpar matrix                ",
     " q - voltar para a tela principal "]
 
 -- imprime a tela principal
-printHUD :: [[Int]] -> Int -> Int -> IO()
-printHUD matrix termWidth height = do
-    let width = termWidth `div` pixelSize
-
+printHUD :: [[Int]] -> IO()
+printHUD matrix = do
     let matrixBuffer = Screen.matrixToBuffer matrix (makePixel matrixContent pixelSize) matrixColor
-    let window = Screen.createScreenBuffer width height "  "
-    let menuBuf = Screen.createBufferFromStringMatrix menuOpcoes pixelSize menuColor
+    let menuBuf = Screen.createBufferFromStringMatrix menuOpcoes pixelSize matrixColor
 
-    -- imprime na tela
-    let tmp1 = Screen.renderInBuffer window matrixBuffer 20 5 -- matriz
-    let tmp2 = Screen.renderInBuffer tmp1 menuBuf 5 5 -- menu
-    Screen.printScreen tmp2
+    -- imprime menu dentro da matrix
+    let window = Screen.renderInBuffer matrixBuffer menuBuf 5 5
+    
+    -- imprime na tela de forma performatica
+    Screen.printScreenPerformed window matrixColor
 
 printMatrixViewRecursive :: [[Int]] -> Int -> Int -> IO()
-printMatrixViewRecursive matrix termWidth termHeight = do
+printMatrixViewRecursive matrix width height = do
 
-    printHUD matrix termWidth termHeight
+    printHUD matrix
 
     -- pega um unico caracter da entrada
     hSetBuffering stdin NoBuffering
     command <- getChar
     hSetBuffering stdin LineBuffering
 
-    case command of 'a' -> printMatrixViewRecursive (Gol.advanceMatrix matrix) termWidth termHeight
+    -- processa o comando recebido
+    case command of 'a' -> printMatrixViewRecursive (Gol.advanceMatrix matrix) width height
                     'q' -> putStrLn "Menu Principal" -- volta para o menu principal
-                    cmd -> printMatrixViewRecursive matrix termWidth termHeight
+                    'c' -> printMatrixViewRecursive (Gol.createEmptyMatrix width height) width height
+                    cmd -> printMatrixViewRecursive matrix width height
 
 -- imprime a tela da matriz do jogo
 printMatrixView :: Int -> Int -> IO()
 printMatrixView termWidth termHeight = do
+    let width = termWidth `div` pixelSize
+    let height = termHeight
+
     -- inicializa matriz vazia
-    let emptyMatrix = Gol.createEmptyMatrix 40 30
+    let emptyMatrix = Gol.createEmptyMatrix width height
 
     -- adiciona padrao na matriz
     let tmp1 = Gol.mergeMatrix Ptn.dart emptyMatrix 0 0
-    let tmp2 = Gol.mergeMatrix Ptn.dart tmp1 15 15
+    let tmp2 = Gol.mergeMatrix Ptn._64P2H1V0 tmp1 15 15
 
-    printMatrixViewRecursive tmp2 termWidth termHeight
+    printMatrixViewRecursive tmp2 width height
