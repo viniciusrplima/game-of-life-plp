@@ -126,7 +126,7 @@ crab = [[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
         [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0], 
         [1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0], 
         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
         [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]]
 
 
@@ -161,18 +161,12 @@ hammerhead =[[1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 
 lightweight_Spaceship :: [[Int]]
-lightweight_Spaceshi =[[0, 1, 0, 0, 1, 0], 
+lightweight_Spaceship =[[0, 1, 0, 0, 1, 0], 
                        [1, 0, 0, 0, 0, 0], 
                        [1, 0, 0, 0, 1, 0],
                        [1, 1, 1, 1, 0, 0]]
 
 
-middleweight_Spaceship :: [[int]]
-middleweight_Spaceship =  [[0, 0, 0, 1, 0, 0, 0], 
-                           [0, 1, 0, 0, 0, 1, 0], 
-                           [1, 0, 0, 0, 0, 0, 0],
-                           [1, 0, 0, 0, 0, 1, 0],
-                           [1, 1, 1, 1, 1, 0, 0]]
 
 
 loafer :: [[Int]]
@@ -226,20 +220,19 @@ patterns :: [([Char], [[Int]])]
 patterns = [
     ("Glider", glider), 
     ("Dart", dart), 
-    ("64P2H1V0", _64P2H1V0)
-    ("Brain", brain)
-    ("Turtle", turtle)
-    ("Sidecar", siderar)
-    ("Swan", swan)
-    ("Orion", orion)
-    ("Crab", crab)
-    ("Wing", wing)
-    ("Hammerhead", hammerhead)
-    ("Lightweight_Spaceship", lightweight_Spaceship)
-    ("Middleweight_Spaceship", middleweight_Spaceship)
-    ("Loafer", loafer)
-    ("Copperhead", copperhead)
-    ("B_heptomino", b_heptomino)
+    ("64P2H1V0", _64P2H1V0),
+    ("Brain", brain),
+    ("Turtle", turtle),
+    ("Sidecar", sidecar),
+    ("Swan", swan),
+    ("Orion", orion),
+    ("Crab", crab),
+    ("Wing", wing),
+    ("Hammerhead", hammerhead),
+    ("Lightweight_Spaceship", lightweight_Spaceship),
+    ("Loafer", loafer),
+    ("Copperhead", copperhead),
+    ("B_heptomino", b_heptomino),
     ("Pi_heptomino", pi_heptomino)
     ]
     
