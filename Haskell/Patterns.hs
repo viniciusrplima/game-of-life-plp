@@ -226,7 +226,25 @@ patterns :: [([Char], [[Int]])]
 patterns = [
     ("Glider", glider), 
     ("Dart", dart), 
-    ("64P2H1V0", _64P2H1V0)]
+    ("64P2H1V0", _64P2H1V0)
+    ("Brain", brain)
+    ("Turtle", turtle)
+    ("Sidecar", siderar)
+    ("Swan", swan)
+    ("Orion", orion)
+    ("Crab", crab)
+    ("Wing", wing)
+    ("Hammerhead", hammerhead)
+    ("Lightweight_Spaceship", lightweight_Spaceship)
+    ("Middleweight_Spaceship", middleweight_Spaceship)
+    ("Loafer", loafer)
+    ("Copperhead", copperhead)
+    ("B_heptomino", b_heptomino)
+    ("Pi_heptomino", pi_heptomino)
+    ]
+    
+
+    
 
 
 -- ****************************
