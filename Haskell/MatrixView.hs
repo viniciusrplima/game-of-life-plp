@@ -30,9 +30,10 @@ printHUD matrix = do
     -- imprime na tela de forma performatica
     Scr.printScreenPerformed window matrixColor
 
-selectPattern :: [[Int]] -> IO()
-selectPattern matrix = do
-    Ps.selectPattern
+selectPatternHandle :: [[Int]] -> [[Int]] -> IO()
+selectPatternHandle matrix pattern = do
+    let newMatrix = Gol.mergeMatrix pattern matrix 10 10
+    printMatrixViewRecursive newMatrix
 
 printMatrixViewRecursive :: [[Int]] -> IO()
 printMatrixViewRecursive matrix = do
@@ -47,7 +48,7 @@ printMatrixViewRecursive matrix = do
     -- processa o comando recebido
     case command of 'f' -> printMatrixViewRecursive (Gol.advanceMatrix matrix)
                     'q' -> putStrLn " "
-                    's' -> selectPattern matrix
+                    's' -> Ps.selectPattern selectPatternHandle matrix
                     'c' -> printMatrixViewRecursive (Gol.createEmptyMatrix Scr.width Scr.height)
                     cmd -> printMatrixViewRecursive matrix
 
