@@ -1,9 +1,8 @@
 module PatternSelect where
 
-
 import qualified Screen as Screen
-import qualified MatrixView as MatrixView
 import qualified Terminal
+import qualified Patterns as Ptn
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 import System.Exit
@@ -27,8 +26,8 @@ printMenu menuTab = do
     let menuColor = "blue"
     let shadow = Screen.createScreenBufferColored 40 25 shadowPxl menuColor
     let rect = Screen.createScreenBufferColored 40 25 solidPxl menuColor
-    let menuBuf = Screen.createBufferFromStringMatrix menuTab pixelWidth "bg-blue"
-    let tableBuf = Screen.createBufferFromStringMatrix commandsTable pixelWidth "bg-red"
+    let menuBuf = Screen.createBufferFromStringMatrix menuTab "bg-blue"
+    let tableBuf = Screen.createBufferFromStringMatrix commandsTable "bg-red"
 
     let tmp1 = Screen.renderInBuffer initialBuffer shadow 15 5
     let tmp2 = Screen.renderInBuffer tmp1 rect 16 6
@@ -55,7 +54,6 @@ selecionaPadrao = [
     "Copperhead ", 
     "B-heptomino ", 
     "Pi-heptomino "
-    
     ]
 
 commandsTable :: [[Char]]
@@ -89,12 +87,8 @@ mainLoop index = do
                                    cmd -> index
 
 
-    if command == 'f' then MatrixView.printMatrixView termWidth termHeight index -- iniciar jogo
- 
-    else putStrLn ""       -- continua no menu
-
     mainLoop newIndex
 
 
-main :: IO()
-main = mainLoop 0
+selectPattern :: IO()
+selectPattern = mainLoop 0

@@ -1,25 +1,14 @@
 
-import qualified Screen as Screen
-import qualified MatrixView as MatrixView
-import qualified PatternSelect as PatternSelect 
+import qualified Screen as Scr
+import qualified MatrixView as Mv
+import qualified PatternSelect as Ps
 import qualified Terminal
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 import System.Exit
 import Control.Concurrent
 
-
-termSize = unsafeDupablePerformIO Terminal.getTermSize
-termHeight = fst termSize
-termWidth = snd termSize
-
-pixelWidth = 2
-
-emptyPxl = replicate pixelWidth ' '
-shadowPxl = replicate pixelWidth '░'
-solidPxl = replicate pixelWidth '█'
-
-initialBuffer = Screen.createScreenBuffer (termWidth `div` pixelWidth) termHeight emptyPxl
+initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
 
 menu :: [[Char]]
 menu = [
@@ -54,17 +43,17 @@ commandsTable = [
 printMenu :: [[Char]] -> IO()
 printMenu menuTab = do
     let menuColor = "blue"
-    let shadow = Screen.createScreenBufferColored 40 25 shadowPxl menuColor
-    let rect = Screen.createScreenBufferColored 40 25 solidPxl menuColor
-    let menuBuf = Screen.createBufferFromStringMatrix menuTab pixelWidth "bg-blue"
-    let tableBuf = Screen.createBufferFromStringMatrix commandsTable pixelWidth "bg-red"
+    let shadow = Scr.createScreenBufferColored 40 25 Scr.shadowPxl menuColor
+    let rect = Scr.createScreenBufferColored 40 25 Scr.solidPxl menuColor
+    let menuBuf = Scr.createBufferFromStringMatrix menuTab "bg-blue"
+    let tableBuf = Scr.createBufferFromStringMatrix commandsTable "bg-red"
 
-    let tmp1 = Screen.renderInBuffer initialBuffer shadow 15 5
-    let tmp2 = Screen.renderInBuffer tmp1 rect 16 6
-    let tmp3 = Screen.renderInBuffer tmp2 menuBuf 23 10
-    let tmp4 = Screen.renderInBuffer tmp3 tableBuf 1 3
+    let tmp1 = Scr.renderInBuffer initialBuffer shadow 15 5
+    let tmp2 = Scr.renderInBuffer tmp1 rect 16 6
+    let tmp3 = Scr.renderInBuffer tmp2 menuBuf 23 10
+    let tmp4 = Scr.renderInBuffer tmp3 tableBuf 1 3
 
-    Screen.printScreen tmp4
+    Scr.printScreen tmp4
 
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
@@ -90,7 +79,7 @@ mainLoop index = do
                                    cmd -> index
 
     if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 'f' && index == 0 then PatternSelect.main -- iniciar jogo
+    else if command == 'f' && index == 0 then Mv.printMatrixView -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex

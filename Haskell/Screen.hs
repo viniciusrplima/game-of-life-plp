@@ -4,12 +4,26 @@ import Text.Printf
 import System.IO
 
 import qualified Gol
+import qualified Terminal
+import System.IO
+import System.IO.Unsafe (unsafeDupablePerformIO)
 
 --   Tipo     Construtor    Atributos
 data IPixel = Pixel         [Char] Int -- Content, Color
 -- criando novo objeto
 -- Pixel "ABC" 33
 
+pixelWidth = 2
+
+termSize = unsafeDupablePerformIO Terminal.getTermSize
+termHeight = fst termSize
+termWidth = snd termSize
+width = termWidth `div` pixelWidth
+height = termHeight
+
+emptyPxl = replicate pixelWidth ' '
+shadowPxl = replicate pixelWidth '░'
+solidPxl = replicate pixelWidth '█'
 
 -- ****************************
 --  COLORS
@@ -97,10 +111,10 @@ stringToBuffer :: [Char] -> Int -> [Char] -> [IPixel]
 stringToBuffer source step color = stringToBufferColor source step (getColor color)
 
 -- cria uma matrix de pixels a partir de uma lista de strings
-createBufferFromStringMatrix :: [[Char]] -> Int -> [Char] -> [[IPixel]]
-createBufferFromStringMatrix [] _ _ = []
-createBufferFromStringMatrix (row:source) pixelSize color = do
-    stringToBuffer row pixelSize color : createBufferFromStringMatrix source pixelSize color
+createBufferFromStringMatrix :: [[Char]] -> [Char] -> [[IPixel]]
+createBufferFromStringMatrix [] _ = []
+createBufferFromStringMatrix (row:source) color = do
+    stringToBuffer row pixelWidth color : createBufferFromStringMatrix source color
 
 -- ****************************
 --  PRINT SCREEN
@@ -183,7 +197,7 @@ printMyBuffer i = do
     let tmp = renderInBuffer initial rect 2 2
     let tmp2 = renderInBuffer tmp otherRect 3 3
     let menu = createMenu myMenu i
-    let menuBuffer = createBufferFromStringMatrix menu 2 "bg-blue"
+    let menuBuffer = createBufferFromStringMatrix menu "bg-blue"
     let final = renderInBuffer tmp2 menuBuffer 6 6 
 
     printScreen final
