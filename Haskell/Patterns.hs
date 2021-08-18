@@ -3,6 +3,7 @@ module Patterns where
 
 import qualified Screen
 import qualified Gol
+import Data.List
 
 glider :: [[Int]]
 glider = [
@@ -188,7 +189,7 @@ pi_heptomino= [[0, 1, 1, 1, 0],
                [0, 0, 0, 0, 0]]
 
 patterns :: [([Char], [[Int]])]
-patterns = [
+patterns = sort [
     ("Glider", glider),
     ("Dart", dart),
     ("64P2H1V0",_64P2H1V0),
