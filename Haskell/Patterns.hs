@@ -189,9 +189,9 @@ pi_heptomino= [[0, 1, 1, 1, 0],
 
 patterns :: [([Char], [[Int]])]
 patterns = [
-    ("Glider", glider), 
-    ("Dart", dart), 
-    ("64P2H1V0", _64P2H1V0),
+    ("Glider", glider),
+    ("Dart", dart),
+    ("64P2H1V0",_64P2H1V0),
     ("Brain", brain),
     ("Turtle", turtle),
     ("Sidecar", sidecar),
@@ -202,10 +202,9 @@ patterns = [
     ("Hammerhead", hammerhead),
     ("Lightweight Spaceship", lightweight_Spaceship),
     ("Loafer", loafer),
-    ("Copperhead", copperhead),
+    ("Copperhead ", copperhead),
     ("B-heptomino", b_heptomino),
-    ("Pi-heptomino", pi_heptomino)
-    ]
+    ("Pi-heptomino", pi_heptomino)]
 
 
 -- ****************************
