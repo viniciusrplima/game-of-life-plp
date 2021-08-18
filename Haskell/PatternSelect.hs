@@ -1,13 +1,13 @@
+module PatternSelect where
+
 
 import qualified Screen as Screen
 import qualified MatrixView as MatrixView
-import qualified PatternSelect as PatternSelect 
 import qualified Terminal
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 import System.Exit
 import Control.Concurrent
-
 
 termSize = unsafeDupablePerformIO Terminal.getTermSize
 termHeight = fst termSize
@@ -20,35 +20,6 @@ shadowPxl = replicate pixelWidth '░'
 solidPxl = replicate pixelWidth '█'
 
 initialBuffer = Screen.createScreenBuffer (termWidth `div` pixelWidth) termHeight emptyPxl
-
-menu :: [[Char]]
-menu = [
-    "██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██", 
-    "  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ", 
-    "                                                  ",
-    "               ██████ ██████ █                    ", 
-    "               █      █    █ █                    ", 
-    "               █    █ █    █ █                    ", 
-    "               ██████ ██████ ██████               ", 
-    "                                                  ", 
-    "██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██", 
-    "  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ", 
-    "                                                  ", 
-    "                                                  ", 
-    "                     Start    ", 
-    "                     Records  ", 
-    "                     Quit     ", 
-    "                                                  ", 
-    "                                                  "]
-
-
-commandsTable :: [[Char]]
-commandsTable = [
-    "                       ", 
-    " s / w - mover cursor  ", 
-    " f - selecionar        ", 
-    "                       "]
-
 
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
@@ -66,6 +37,34 @@ printMenu menuTab = do
 
     Screen.printScreen tmp4
 
+selecionaPadrao :: [[Char]]
+selecionaPadrao = [
+    "Glider ", 
+    "Dart ", 
+    "64P2H1V0 ",
+    "Brain ", 
+    "Turtle ", 
+    "Sidecar ", 
+    "Swan ", 
+    "Orion ", 
+    "Crab ", 
+    "Wing ", 
+    "Hammerhead ", 
+    "Lightweight Spaceship ", 
+    "Loafer ", 
+    "Copperhead ", 
+    "B-heptomino ", 
+    "Pi-heptomino "
+    
+    ]
+
+commandsTable :: [[Char]]
+commandsTable = [
+    "                       ", 
+    " s / w - mover cursor  ", 
+    " f - selecionar        ",  
+    "                       "]
+
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
 printArrow [] _ = []
@@ -74,10 +73,10 @@ printArrow (row:rest) i     = row : printArrow rest (pred i)
 
 mainLoop :: Int -> IO()
 mainLoop index = do
-    let maxIndex = 3
-    let offset = 12
+    let maxIndex = 16
+    let offset = 0
 
-    printMenu $ printArrow menu (index + offset)
+    printMenu $ printArrow selecionaPadrao (index + offset)
     
     -- pega um unico caracter da entrada
     hSetBuffering stdin NoBuffering
@@ -89,8 +88,9 @@ mainLoop index = do
                                    's' -> ((succ index) + maxIndex) `mod` maxIndex
                                    cmd -> index
 
-    if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 'f' && index == 0 then PatternSelect.main -- iniciar jogo
+
+    if command == 'f' then MatrixView.printMatrixView termWidth termHeight index -- iniciar jogo
+ 
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex

@@ -18,10 +18,9 @@ makePixel character numVezes = replicate numVezes character
 
 menuOpcoes :: [[Char]]
 menuOpcoes = [
-    " a - avanca                       ", 
-    " s - selecionar padrao            ", 
+    " f - avanca                       ", 
     " c - limpar matrix                ",
-    " q - voltar para a tela principal "]
+    " q - voltar para a tela de seleção "]
 
 -- imprime a tela principal
 printHUD :: [[Int]] -> IO()
@@ -46,22 +45,23 @@ printMatrixViewRecursive matrix width height = do
     hSetBuffering stdin LineBuffering
 
     -- processa o comando recebido
-    case command of 'a' -> printMatrixViewRecursive (Gol.advanceMatrix matrix) width height
-                    'q' -> putStrLn "Menu Principal" -- volta para o menu principal
+    case command of 'f' -> printMatrixViewRecursive (Gol.advanceMatrix matrix) width height
+                    'q' -> putStrLn " "
                     'c' -> printMatrixViewRecursive (Gol.createEmptyMatrix width height) width height
                     cmd -> printMatrixViewRecursive matrix width height
 
 -- imprime a tela da matriz do jogo
-printMatrixView :: Int -> Int -> IO()
-printMatrixView termWidth termHeight = do
+printMatrixView :: Int -> Int -> Int-> IO()
+printMatrixView termWidth termHeight index = do
     let width = termWidth `div` pixelSize
     let height = termHeight
-
+    let idx = index
+    print "index"
     -- inicializa matriz vazia
     let emptyMatrix = Gol.createEmptyMatrix width height
 
     -- adiciona padrao na matriz
-    let tmp1 = Gol.mergeMatrix Ptn.dart emptyMatrix 0 0
-    let tmp2 = Gol.mergeMatrix Ptn._64P2H1V0 tmp1 15 15
-
-    printMatrixViewRecursive tmp2 width height
+    
+    let tmp1 = Gol.mergeMatrix (Ptn.patterns !! idx) emptyMatrix 20 20
+    
+    printMatrixViewRecursive tmp1 width height 
