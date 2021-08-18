@@ -4,6 +4,7 @@ import qualified Screen as Scr
 import qualified Gol
 import qualified Patterns as Ptn
 import qualified PatternSelect as Ps
+import qualified PatternLocate as Pl
 import Text.Printf
 import System.IO
 import Control.Concurrent
@@ -13,10 +14,10 @@ matrixColor = "white"
 
 menuOpcoes :: [[Char]]
 menuOpcoes = [
-    " f - avanca                        ", 
-    " c - limpar matrix                 ",
-    " s - selecionar padrao             ",
-    " q - voltar para a tela de seleção "]
+    " f - avanca                      ", 
+    " c - limpar matrix               ",
+    " s - selecionar padrao           ",
+    " q - voltar para o menu inicial  "]
 
 -- imprime a tela principal
 printHUD :: [[Int]] -> IO()
@@ -31,9 +32,7 @@ printHUD matrix = do
     Scr.printScreenPerformed window matrixColor
 
 selectPatternHandle :: [[Int]] -> [[Int]] -> IO()
-selectPatternHandle matrix pattern = do
-    let newMatrix = Gol.mergeMatrix pattern matrix 10 10
-    printMatrixViewRecursive newMatrix
+selectPatternHandle matrix pattern = Pl.locatePattern printMatrixViewRecursive matrix pattern
 
 printMatrixViewRecursive :: [[Int]] -> IO()
 printMatrixViewRecursive matrix = do
