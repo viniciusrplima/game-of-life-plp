@@ -6,6 +6,7 @@ import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 import System.Exit
 import Control.Concurrent
+import qualified Gol
 
 termSize = unsafeDupablePerformIO Terminal.getTermSize
 termHeight = fst termSize
@@ -39,6 +40,8 @@ menu = [
     "                                                  ", 
     "                                                  "]
 
+   
+
 
 commandsTable :: [[Char]]
 commandsTable = [
@@ -47,6 +50,44 @@ commandsTable = [
     " f - selecionar        ", 
     " ctrl+c - sair do jogo ", 
     "                       "]
+
+
+logo :: [[Int]]
+logo = [
+    [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+    [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+    [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]]
+
+--Cores
+palette :: [[Char]]
+palette = ["blue","white","red","green","yellow","purple","leaf"]
+
+paletteBg :: [[Char]]
+paletteBg = ["bg-blue","bg-leaf","bg-purple","bg-yellow","bg-green","bg-red","bg-white"]
+
+--Cria a nimacao ao inicia
+animation :: Int -> IO ()
+animation value = do
+    if value < 7
+        then do
+            let color = palette !! value
+            let shadow1 = Screen.createScreenBufferColored 40 25 shadowPxl color
+            let rect1 = Screen.createScreenBufferColored 40 25 solidPxl color
+
+            let time1 = Screen.renderInBuffer initialBuffer shadow1 15 5
+            let time2 = Screen.renderInBuffer time1 rect1 16 6
+            let time3 = Screen.renderInBuffer time2 (Screen.matrixToBuffer logo solidPxl (paletteBg !! value)) 23 10
+            Screen.printScreen time3
+            threadDelay 999999
+            animation(value + 1)
+        else MatrixView.printMatrixView termWidth termHeight
 
 
 -- cria o menu e imprime ele na tela
@@ -89,7 +130,7 @@ mainLoop index = do
                                    cmd -> index
 
     if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 'f' && index == 0 then MatrixView.printMatrixView termWidth termHeight -- iniciar jogo
+    else if command == 't' && index == 0 then animation 0 -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex
