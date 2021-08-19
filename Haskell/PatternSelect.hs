@@ -48,7 +48,7 @@ printArrow (row:rest) i     = row : printArrow rest (pred i)
 
 mainLoop :: ([[Int]] -> [[Int]] -> IO()) -> [[Int]] -> Int -> IO()
 mainLoop func matrix index = do
-    let maxIndex = 16
+    let maxIndex = length Ptn.patterns
     let offset = 0
 
     printMenu $ printArrow createPatternsList (index + offset)

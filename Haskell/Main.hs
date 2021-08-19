@@ -68,16 +68,16 @@ animation value = do
     if value < 7
         then do
             let color = palette !! value
-            let shadow1 = Screen.createScreenBufferColored 40 25 shadowPxl color
-            let rect1 = Screen.createScreenBufferColored 40 25 solidPxl color
+            let shadow1 = Scr.createScreenBufferColored 40 25 Scr.shadowPxl color
+            let rect1 = Scr.createScreenBufferColored 40 25 Scr.solidPxl color
 
-            let time1 = Screen.renderInBuffer initialBuffer shadow1 15 5
-            let time2 = Screen.renderInBuffer time1 rect1 16 6
-            let time3 = Screen.renderInBuffer time2 (Screen.matrixToBuffer logo solidPxl (paletteBg !! value)) 23 10
-            Screen.printScreen time3
-            threadDelay 999999
+            let time1 = Scr.renderInBuffer initialBuffer shadow1 15 5
+            let time2 = Scr.renderInBuffer time1 rect1 16 6
+            let time3 = Scr.renderInBuffer time2 (Scr.matrixToBuffer logo Scr.solidPxl (paletteBg !! value)) 23 10
+            Scr.printScreen time3
+            threadDelay 50000
             animation(value + 1)
-        else MatrixView.printMatrixView termWidth termHeight
+        else Mv.printMatrixView
 
 
 -- cria o menu e imprime ele na tela
