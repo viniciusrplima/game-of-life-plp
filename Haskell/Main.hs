@@ -130,7 +130,7 @@ mainLoop index = do
                                    cmd -> index
 
     if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 't' && index == 0 then animation 0 -- iniciar jogo
+    else if command == 'f' && index == 0 then animation 0 -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex
