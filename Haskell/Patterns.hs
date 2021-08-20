@@ -244,6 +244,17 @@ pufferfish = [[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
               [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
+gliderFlower :: [[Int]]
+gliderFlower = [
+    [0,1,0,0,0,1,1,0],
+    [1,1,0,0,0,0,1,1],
+    [1,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,1],
+    [1,1,0,0,0,0,1,1],
+    [0,1,1,0,0,0,1,0]]
+
 patterns :: [([Char], [[Int]])]
 patterns = sort [
     ("Glider", glider),
@@ -267,7 +278,8 @@ patterns = sort [
     ("R-pentomino", r_pentomino),
     ("Puffer 1", puffer1),
     ("Puffer 2", puffer2),
-    ("Pufferfish", pufferfish)]
+    ("Pufferfish", pufferfish),
+    ("Glider Flower", gliderFlower)]
 
 -- ****************************
 --  TESTS
