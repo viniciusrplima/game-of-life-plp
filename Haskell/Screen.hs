@@ -75,6 +75,24 @@ createScreenBuffer w h c = createScreenBufferColored w h c "white"
 createScreenBufferColored :: Int -> Int -> [Char] -> [Char] -> [[IPixel]]
 createScreenBufferColored w h c color = replicate h $ replicate w $ (Pixel c (getColor color))
 
+-- largura de um buffer, maior largura entre todas as linhas
+bufferWidth :: [[IPixel]] -> Int
+bufferWidth buffer = maximum $ map length buffer
+
+bufferHeight :: [[IPixel]] -> Int
+bufferHeight buffer = length buffer
+
+-- imprime um buffer no centro de outro
+renderInCenter :: [[IPixel]] -> [[IPixel]] -> [[IPixel]]
+renderInCenter buffer source = renderCentralized buffer source 0 0
+
+-- imprime um buffer no centro de outro com um deslocamento
+renderCentralized :: [[IPixel]] -> [[IPixel]] -> Int -> Int -> [[IPixel]]
+renderCentralized buffer source offsetX offsetY = do
+    let x = (bufferWidth buffer) `div` 2 - (bufferWidth source) `div` 2 + offsetX
+    let y = (bufferHeight buffer) `div` 2 - (bufferHeight source) `div` 2 + offsetY
+    renderInBuffer buffer source x y
+
 -- imprime buffer no buffer
 renderInBuffer :: [[IPixel]] -> [[IPixel]] -> Int -> Int -> [[IPixel]]
 renderInBuffer buffer source x y
