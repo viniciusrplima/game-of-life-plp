@@ -9,4 +9,4 @@ run:
 	./$(EXEC_FILE)
 
 clean:
-	rm *.o $(EXEC_FILE)
+	rm *.o *.hi $(EXEC_FILE)
