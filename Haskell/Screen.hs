@@ -75,6 +75,24 @@ createScreenBuffer w h c = createScreenBufferColored w h c "white"
 createScreenBufferColored :: Int -> Int -> [Char] -> [Char] -> [[IPixel]]
 createScreenBufferColored w h c color = replicate h $ replicate w $ (Pixel c (getColor color))
 
+-- largura de um buffer, maior largura entre todas as linhas
+bufferWidth :: [[IPixel]] -> Int
+bufferWidth buffer = maximum $ map length buffer
+
+bufferHeight :: [[IPixel]] -> Int
+bufferHeight buffer = length buffer
+
+-- imprime um buffer no centro de outro
+renderInCenter :: [[IPixel]] -> [[IPixel]] -> [[IPixel]]
+renderInCenter buffer source = renderCentralized buffer source 0 0
+
+-- imprime um buffer no centro de outro com um deslocamento
+renderCentralized :: [[IPixel]] -> [[IPixel]] -> Int -> Int -> [[IPixel]]
+renderCentralized buffer source offsetX offsetY = do
+    let x = (bufferWidth buffer) `div` 2 - (bufferWidth source) `div` 2 + offsetX
+    let y = (bufferHeight buffer) `div` 2 - (bufferHeight source) `div` 2 + offsetY
+    renderInBuffer buffer source x y
+
 -- imprime buffer no buffer
 renderInBuffer :: [[IPixel]] -> [[IPixel]] -> Int -> Int -> [[IPixel]]
 renderInBuffer buffer source x y
@@ -174,41 +192,3 @@ createPixelFromGolCell :: Int -> [Char] -> Int -> IPixel
 createPixelFromGolCell cell content color
     | cell == Gol.deadCell = Pixel (replicate (length content) ' ') color
     | otherwise = Pixel content color
-
--- ****************************
---  TESTS
--- ****************************
-
-myMenu = [
-    "-- GOL --", 
-    "1) Start   ", 
-    "2) Records ", 
-    "3) Quit    "]
-
-createMenu :: [[Char]] -> Int -> [[Char]]
-createMenu [] i = []
-createMenu (row:menu) 0 = (row ++ "<--") : menu
-createMenu (row:menu) i = row : createMenu menu (pred i)
-
-printMyBuffer i = do
-    let initial = createScreenBuffer 20 20 "  "
-    let rect = createScreenBufferColored 15 10 "░░" "blue"
-    let otherRect = createScreenBufferColored 15 10 "██" "blue"
-    let tmp = renderInBuffer initial rect 2 2
-    let tmp2 = renderInBuffer tmp otherRect 3 3
-    let menu = createMenu myMenu i
-    let menuBuffer = createBufferFromStringMatrix menu "bg-blue"
-    let final = renderInBuffer tmp2 menuBuffer 6 6 
-
-    printScreen final
-
-    hSetBuffering stdin NoBuffering
-    command <- getChar 
-    hSetBuffering stdin LineBuffering
-
-    if (command == 'w') then do
-        let prevI = if i == 1 then 3 else (pred i)
-        printMyBuffer prevI
-    else do
-        let nextI = if i == 3 then 1 else (succ i)
-        printMyBuffer nextI
