@@ -286,7 +286,7 @@ patterns = sort [
 -- ****************************
 
 printPattern :: [[Int]] -> IO()
-printPattern pattern = Screen.printScreen $ Screen.matrixToBuffer pattern "██" "white"
+printPattern pattern = Screen.printScreen $ Screen.matrixToBuffer pattern "██"
 
 printPatternSequence :: [[Int]] -> Int -> IO()
 printPatternSequence _ 0 = putStrLn ""

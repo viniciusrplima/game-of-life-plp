@@ -30,17 +30,17 @@ commandsTable = [
 printMenu :: [[Char]] -> IO()
 printMenu menuTab = do
     let initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
-    let titleBuf = Scr.createBufferFromStringMatrix title "white"
-    let menuBuf = Scr.createBufferFromStringMatrix menuTab "white"
-    let tableBuf = Scr.createBufferFromStringMatrix commandsTable "white"
-    let flowerBuf = Scr.matrixToBuffer Ptn.gliderFlower Scr.solidPxl "white"
+    let titleBuf = Scr.createBufferFromStringMatrix title
+    let menuBuf = Scr.createBufferFromStringMatrix menuTab
+    let tableBuf = Scr.createBufferFromStringMatrix commandsTable
+    let flowerBuf = Scr.matrixToBuffer Ptn.gliderFlower Scr.solidPxl
 
     let tmp1 = Scr.renderCentralized initialBuffer titleBuf 0 5
     let tmp2 = Scr.renderCentralized tmp1 menuBuf 0 10
     let tmp3 = Scr.renderInBuffer tmp2 tableBuf 1 3
     let tmp4 = Scr.renderCentralized tmp3 flowerBuf 0 (-5)
 
-    Scr.printScreenPerformed tmp4 "white"
+    Scr.printScreen tmp4
 
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
