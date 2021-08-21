@@ -8,59 +8,24 @@ import qualified Terminal
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 
---   Tipo     Construtor    Atributos
-data IPixel = Pixel         [Char] Int -- Content, Color
--- criando novo objeto
--- Pixel "ABC" 33
+-- um pixel representa uma string que sera tratada
+-- como uma unidade na tela
+data IPixel = Pixel [Char]
 
-pixelWidth = 2
+pixelWidth = 2 -- tamanho do pixel padrao da tela
 
 termSize = unsafeDupablePerformIO Terminal.getTermSize
 termHeight = fst termSize
 termWidth = snd termSize
+
+-- tamanho da tela composta por pixels
 width = termWidth `div` pixelWidth
 height = termHeight
 
+-- alguns pixels padroes
 emptyPxl = replicate pixelWidth ' '
 shadowPxl = replicate pixelWidth '░'
 solidPxl = replicate pixelWidth '█'
-
--- ****************************
---  COLORS
--- ****************************
-
--- retorna o codigo da cor
--- os codigos das cores do terminal sao representados por inteiros
-getColor :: [Char] -> Int
-getColor "white"    = 29
-getColor "black"    = 30
-getColor "red"      = 31
-getColor "green"    = 32
-getColor "yellow"   = 33
-getColor "blue"     = 34
-getColor "purple"   = 35
-getColor "leaf"     = 36
-getColor "bg-gray"  = 40
-getColor "bg-red"   = 41
-getColor "bg-green" = 42
-getColor "bg-yellow"= 43
-getColor "bg-blue"  = 44
-getColor "bg-purple"= 45
-getColor "bg-leaf"  = 46
-getColor "bg-white" = 47
-getColor clr = error ("Cor '" ++ clr ++ "' nao existe")
-
-
--- colore uma string
--- usando o codigo das cores e concatenando tudo podemos ter uma string colorida
--- no terminal
-colorizeString :: [Char] -> [Char] -> [Char]
-colorizeString text color = colorizeStringByCode text (getColor color)
-
-colorizeStringByCode :: [Char] -> Int -> [Char]
-colorizeStringByCode text color = ("\x1b[" ++ (show color) ++ "m" ++ text ++ "\x1b[0m")
-
-
 
 -- ****************************
 --  BUFFERS
@@ -69,11 +34,11 @@ colorizeStringByCode text color = ("\x1b[" ++ (show color) ++ "m" ++ text ++ "\x
 -- cria uma matrix de strings que serve como buffer para
 -- imprimir na tela
 createScreenBuffer :: Int -> Int -> [Char] -> [[IPixel]]
-createScreenBuffer w h c = createScreenBufferColored w h c "white"
+createScreenBuffer w h c = createScreenBufferColored w h c
 
 -- cria uma matrix de strings colorida
-createScreenBufferColored :: Int -> Int -> [Char] -> [Char] -> [[IPixel]]
-createScreenBufferColored w h c color = replicate h $ replicate w $ (Pixel c (getColor color))
+createScreenBufferColored :: Int -> Int -> [Char] -> [[IPixel]]
+createScreenBufferColored w h c = replicate h $ replicate w $ (Pixel c)
 
 -- largura de um buffer, maior largura entre todas as linhas
 bufferWidth :: [[IPixel]] -> Int
@@ -118,21 +83,18 @@ renderInBufferRow target source i
           sourceTail = tail source
 
 -- converte string em buffer
-stringToBufferColor :: [Char] -> Int -> Int -> [IPixel]
-stringToBufferColor "" _ _ = []
-stringToBufferColor source step color  = do
+stringToBuffer :: [Char] -> Int -> [IPixel]
+stringToBuffer "" _ = []
+stringToBuffer source step = do
     let rest = drop step source
     let content = take step $ source ++ (repeat ' ')
-    (Pixel content color) : stringToBufferColor rest step color
-
-stringToBuffer :: [Char] -> Int -> [Char] -> [IPixel]
-stringToBuffer source step color = stringToBufferColor source step (getColor color)
+    (Pixel content) : stringToBuffer rest step
 
 -- cria uma matrix de pixels a partir de uma lista de strings
-createBufferFromStringMatrix :: [[Char]] -> [Char] -> [[IPixel]]
-createBufferFromStringMatrix [] _ = []
-createBufferFromStringMatrix (row:source) color = do
-    stringToBuffer row pixelWidth color : createBufferFromStringMatrix source color
+createBufferFromStringMatrix :: [[Char]] -> [[IPixel]]
+createBufferFromStringMatrix [] = []
+createBufferFromStringMatrix (row:source) = do
+    stringToBuffer row pixelWidth : createBufferFromStringMatrix source
 
 -- ****************************
 --  PRINT SCREEN
@@ -144,8 +106,8 @@ bufferToString (row:buffer) = bufferRowToString row ++ bufferToString buffer
 
 bufferRowToString :: [IPixel] -> [Char]
 bufferRowToString [] = "\n"
-bufferRowToString ((Pixel content color):row)= do
-    colorizeStringByCode content color ++ bufferRowToString row
+bufferRowToString ((Pixel content):row)= do
+    content ++ bufferRowToString row
 
 -- renderiza um buffer na tela utilizando
 -- buffer na saída do terminal
@@ -156,39 +118,19 @@ printScreen buffer = do
     hFlush stdout
     hSetBuffering stdout LineBuffering
 
-bufferToStringPerformed :: [[IPixel]] -> [Char]
-bufferToStringPerformed [] = ""
-bufferToStringPerformed (row:buffer) = bufferRowToStringPerformed row ++ bufferToStringPerformed buffer
-
-bufferRowToStringPerformed :: [IPixel] -> [Char]
-bufferRowToStringPerformed [] = "\n"
-bufferRowToStringPerformed ((Pixel content color):row)= do
-    content ++ bufferRowToStringPerformed row
-
--- aumenta a performance da impressao pois ignora as cores dos pixels
-printScreenPerformed :: [[IPixel]] -> [Char] -> IO()
-printScreenPerformed buffer color = do
-    hSetBuffering stdout (BlockBuffering Nothing)
-    putStrLn $ colorizeStringByCode (bufferToStringPerformed buffer) (getColor color)
-    hFlush stdout
-    hSetBuffering stdout LineBuffering
-
 -- ****************************
 --  GOL UTILS
 -- ****************************
 
-matrixToBuffer :: [[Int]] -> [Char] -> [Char] -> [[IPixel]]
-matrixToBuffer matrix content color = matrixToBufferColored matrix content (getColor color)
+matrixToBuffer :: [[Int]] -> [Char] -> [[IPixel]]
+matrixToBuffer [] _ = []
+matrixToBuffer (row:matrix) content = matrixRowToBufferRow row content : matrixToBuffer matrix content
 
-matrixToBufferColored :: [[Int]] -> [Char] -> Int -> [[IPixel]]
-matrixToBufferColored [] _ _ = []
-matrixToBufferColored (row:matrix) content color = matrixRowToBufferRow row content color : matrixToBufferColored matrix content color
+matrixRowToBufferRow :: [Int] -> [Char] -> [IPixel]
+matrixRowToBufferRow [] _ = []
+matrixRowToBufferRow (cell:row) content = createPixelFromGolCell cell content : matrixRowToBufferRow row content
 
-matrixRowToBufferRow :: [Int] -> [Char] -> Int -> [IPixel]
-matrixRowToBufferRow [] _ _ = []
-matrixRowToBufferRow (cell:row) content color = createPixelFromGolCell cell content color : matrixRowToBufferRow row content color
-
-createPixelFromGolCell :: Int -> [Char] -> Int -> IPixel
-createPixelFromGolCell cell content color
-    | cell == Gol.deadCell = Pixel (replicate (length content) ' ') color
-    | otherwise = Pixel content color
+createPixelFromGolCell :: Int -> [Char] -> IPixel
+createPixelFromGolCell cell content
+    | cell == Gol.deadCell = Pixel (replicate (length content) ' ')
+    | otherwise = Pixel content

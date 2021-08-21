@@ -17,12 +17,11 @@ menu = [
 
 locatePatternRec :: ([[Int]] -> IO()) -> [[Int]] -> [[Int]] -> Int -> Int -> IO()
 locatePatternRec func matrix pattern row col = do
-    let matrixColor = "white"
     let mergedMatrix = Gol.mergeMatrix pattern matrix row col
-    let matBuf = Scr.matrixToBuffer mergedMatrix Scr.solidPxl matrixColor
-    let menuBuf = Scr.createBufferFromStringMatrix menu matrixColor
+    let matBuf = Scr.matrixToBuffer mergedMatrix Scr.solidPxl
+    let menuBuf = Scr.createBufferFromStringMatrix menu
     let final = Scr.renderInBuffer matBuf menuBuf 5 5
-    Scr.printScreenPerformed final matrixColor
+    Scr.printScreen final
 
     -- pega um unico caracter da entrada
     hSetBuffering stdin NoBuffering

@@ -9,9 +9,6 @@ import Text.Printf
 import System.IO
 import Control.Concurrent
 
--- constants
-matrixColor = "white"
-
 menuOpcoes :: [[Char]]
 menuOpcoes = [
     " f - avanca                      ", 
@@ -22,14 +19,14 @@ menuOpcoes = [
 -- imprime a tela principal
 printHUD :: [[Int]] -> IO()
 printHUD matrix = do
-    let matrixBuffer = Scr.matrixToBuffer matrix Scr.solidPxl matrixColor
-    let menuBuf = Scr.createBufferFromStringMatrix menuOpcoes matrixColor
+    let matrixBuffer = Scr.matrixToBuffer matrix Scr.solidPxl
+    let menuBuf = Scr.createBufferFromStringMatrix menuOpcoes
 
     -- imprime menu dentro da matrix
     let window = Scr.renderInBuffer matrixBuffer menuBuf 5 5
     
     -- imprime na tela de forma performatica
-    Scr.printScreenPerformed window matrixColor
+    Scr.printScreen window
 
 selectPatternHandle :: [[Int]] -> [[Int]] -> IO()
 selectPatternHandle matrix pattern = Pl.locatePattern printMatrixViewRecursive matrix pattern

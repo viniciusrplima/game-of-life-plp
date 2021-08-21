@@ -13,11 +13,10 @@ initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
 printMenu menuTab = do
-    let menuColor = "blue"
-    let shadow = Scr.createScreenBufferColored 40 25 Scr.shadowPxl menuColor
-    let rect = Scr.createScreenBufferColored 40 25 Scr.solidPxl menuColor
-    let menuBuf = Scr.createBufferFromStringMatrix menuTab "bg-blue"
-    let tableBuf = Scr.createBufferFromStringMatrix commandsTable "bg-red"
+    let shadow = Scr.createScreenBufferColored 40 25 Scr.shadowPxl
+    let rect = Scr.createScreenBufferColored 40 25 Scr.solidPxl
+    let menuBuf = Scr.createBufferFromStringMatrix menuTab
+    let tableBuf = Scr.createBufferFromStringMatrix commandsTable
 
     let tmp1 = Scr.renderInBuffer initialBuffer shadow 15 5
     let tmp2 = Scr.renderInBuffer tmp1 rect 16 6
