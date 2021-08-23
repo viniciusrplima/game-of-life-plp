@@ -22,17 +22,11 @@ menu = [
 locatePatternRec :: ([[Int]] -> IO()) -> [[Int]] -> [[Int]] -> Int -> Int -> IO()
 locatePatternRec func matrix pattern row col = do
     let mergedMatrix = mergeMatrix2 pattern matrix row col
+    
     let matBuf = matrixToBuffer2 mergedMatrix Scr.solidPxl
     let menuBuf = Scr.createBufferFromStringMatrix menu
     let final = Scr.renderInBuffer matBuf menuBuf 5 5
     Scr.printScreen final
-
-    --let matrixBuf = Scr.matrixToBuffer matrix Scr.shadowPxl 
-    --let patternBuf = Scr.matrixToBuffer pattern Scr.solidPxl
-   -- let menuBuf = Scr.createBufferFromStringMatrix menu
-
-    --let tmp1 = Scr.renderInBuffer matrixBuf patternBuf row col 
-    --let tmp2 = Scr.renderInBuffer tmp1
 
     -- pega um unico caracter da entrada
     hSetBuffering stdin NoBuffering
@@ -66,8 +60,8 @@ matrixRowToBufferRow2 (cell:row) content = createPixelFromGolCell2 cell content 
 createPixelFromGolCell2 :: Int -> [Char] -> Scr.IPixel
 createPixelFromGolCell2 cell content
     | cell == 0 = Scr.Pixel (replicate (length content) ' ')
-    | cell == 1 = Scr.Pixel content
-    | cell == 2 = Scr.Pixel Scr.shadowPxl 
+    | cell == 2 = Scr.Pixel content
+    | cell == 1 = Scr.Pixel Scr.shadowPxl 
 
 
 mergeMatrix2 :: [[Int]] -> [[Int]] -> Int -> Int -> [[Int]]
@@ -82,10 +76,13 @@ mergeMatrixRow2 [] targetRow _ = targetRow
 mergeMatrixRow2 (scell:sourceRow) (tcell:targetRow) 0 = mergeCell2 scell tcell : mergeMatrixRow2 sourceRow targetRow 0
 mergeMatrixRow2 sourceRow (tcell:targetRow) col = tcell : mergeMatrixRow2 sourceRow targetRow (pred col)
 
+
+
 mergeCell2 :: Int -> Int -> Int
 mergeCell2 0 0 = 0
-mergecell2 1 0 = 1
-mergecell2 0 1 = 1
-mergecell2 1 1 = 2
+mergeCell2 1 0 = 2
+mergeCell2 0 1 = 1
+mergeCell2 1 1 = 2
+mergeCell2 a b = 0
     
 
