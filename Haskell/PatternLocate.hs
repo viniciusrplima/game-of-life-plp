@@ -3,10 +3,6 @@ module PatternLocate where
 import qualified Gol
 import qualified Screen as Scr
 import System.IO
-import qualified System.Win32.FileMapping as Scr
-import Text.XHtml.Transitional (content)
-
-
 
 menu :: [[Char]]
 menu = [
