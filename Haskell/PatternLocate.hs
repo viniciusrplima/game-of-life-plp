@@ -17,7 +17,8 @@ menu = [
 
 locatePatternRec :: ([[Int]] -> IO()) -> [[Int]] -> [[Int]] -> Int -> Int -> IO()
 locatePatternRec func matrix pattern row col = do
-    let mergedMatrix = Gol.mergeMatrix pattern matrix row col
+    let mergedMatrix = Gol.mergeMatrixHighlight pattern matrix row col
+    
     let matBuf = Scr.matrixToBuffer mergedMatrix Scr.solidPxl
     let menuBuf = Scr.createBufferFromStringMatrix menu
     let final = Scr.renderInBuffer matBuf menuBuf 5 5

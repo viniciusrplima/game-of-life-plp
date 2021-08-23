@@ -13,6 +13,10 @@ liveCell = 1
 deadCell :: Int
 deadCell = 0
 
+-- usado para diferenciar celulas
+otherCell :: Int
+otherCell = 2
+
 -- cria matriz vazia
 createEmptyMatrix :: Int -> Int -> [[Int]]
 createEmptyMatrix x y = replicate y (replicate x 0)
@@ -100,6 +104,32 @@ mergeCell cellA cellB = do
     if cellA == liveCell || cellB == liveCell 
         then liveCell 
         else deadCell
+
+-- junta duas matrizes de forma que as celulas das duas fiquem 
+mergeMatrixHighlight :: [[Int]] -> [[Int]] -> Int -> Int -> [[Int]]
+mergeMatrixHighlight mat target row col = mergeMatrixHLOverlap mat (transformCellsToHighlight target) row col
+
+mergeMatrixHLOverlap :: [[Int]] -> [[Int]] -> Int -> Int -> [[Int]]
+mergeMatrixHLOverlap _ [] _ _ = []
+mergeMatrixHLOverlap [] target _ _ = target
+mergeMatrixHLOverlap (srow:source) (trow:target) 0 col = mergeMatrixHighlightRow srow trow col : mergeMatrixHLOverlap source target 0 col
+mergeMatrixHLOverlap source (trow:target) row col = trow : mergeMatrixHLOverlap source target (pred row) col
+
+mergeMatrixHighlightRow :: [Int] -> [Int] -> Int -> [Int]
+mergeMatrixHighlightRow _ [] _ = []
+mergeMatrixHighlightRow [] targetRow _ = targetRow
+mergeMatrixHighlightRow (scell:sourceRow) (tcell:targetRow) 0 = mergeCellHighlight scell tcell : mergeMatrixHighlightRow sourceRow targetRow 0
+mergeMatrixHighlightRow sourceRow (tcell:targetRow) col = tcell : mergeMatrixHighlightRow sourceRow targetRow (pred col)
+
+mergeCellHighlight :: Int -> Int -> Int
+mergeCellHighlight a b
+    | a /= deadCell = liveCell
+    | b /= deadCell = otherCell
+    | otherwise = deadCell
+
+-- transform liveCells into otherCells
+transformCellsToHighlight :: [[Int]] -> [[Int]]
+transformCellsToHighlight matrix = map (\a -> map (\c -> if c == liveCell then otherCell else c) a) matrix
 
 -- rotaciona matriz para a esquerda
 rotateMatrixLeft :: [[Int]] -> [[Int]]

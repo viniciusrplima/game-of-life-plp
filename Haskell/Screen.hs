@@ -132,5 +132,7 @@ matrixRowToBufferRow (cell:row) content = createPixelFromGolCell cell content : 
 
 createPixelFromGolCell :: Int -> [Char] -> IPixel
 createPixelFromGolCell cell content
-    | cell == Gol.deadCell = Pixel (replicate (length content) ' ')
-    | otherwise = Pixel content
+    | cell == Gol.deadCell = Pixel emptyPxl
+    | cell == Gol.liveCell = Pixel solidPxl
+    | cell == 2 = Pixel shadowPxl
+    | otherwise = Pixel emptyPxl
