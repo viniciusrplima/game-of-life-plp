@@ -93,6 +93,18 @@ mergeMatrix [] target _ _ = target
 mergeMatrix (srow:source) (trow:target) 0 col = mergeMatrixRow srow trow col : mergeMatrix source target 0 col
 mergeMatrix source (trow:target) row col = trow : mergeMatrix source target (pred row) col
 
+matrixWidth :: [[Int]] -> Int
+matrixWidth mat = length $ mat!!0
+
+matrixHeight :: [[Int]] -> Int
+matrixHeight mat = length mat
+
+mergeMatrixCentralized :: [[Int]] -> [[Int]] -> [[Int]]
+mergeMatrixCentralized source target = do
+    let col = (matrixWidth target) `div` 2 - (matrixWidth source) `div` 2
+    let row = (matrixHeight target) `div` 2 - (matrixHeight source) `div` 2
+    mergeMatrix source target row col
+
 mergeMatrixRow :: [Int] -> [Int] -> Int -> [Int]
 mergeMatrixRow _ [] _ = []
 mergeMatrixRow [] targetRow _ = targetRow
