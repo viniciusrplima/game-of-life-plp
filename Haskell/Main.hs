@@ -26,6 +26,18 @@ commandsTable = [
     " s / w - mover cursor  ", 
     " f - selecionar        "]
 
+animationIters :: Int
+animationIters = 30
+
+animationDelay :: Int
+animationDelay = 30000
+
+initialLogoMatrix :: [[Int]]
+initialLogoMatrix = do
+    let largeMatrix = Gol.createEmptyMatrix 25 25
+    let patternMatrix = Gol.mergeMatrixCentralized Ptn.gliderFlower largeMatrix
+    patternMatrix
+
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
 printMenu menuTab = do
@@ -33,12 +45,12 @@ printMenu menuTab = do
     let titleBuf = Scr.createBufferFromStringMatrix title
     let menuBuf = Scr.createBufferFromStringMatrix menuTab
     let tableBuf = Scr.createBufferFromStringMatrix commandsTable
-    let flowerBuf = Scr.matrixToBuffer Ptn.gliderFlower Scr.solidPxl
+    let flowerBuf = Scr.matrixToBuffer initialLogoMatrix Scr.solidPxl
 
-    let tmp1 = Scr.renderCentralized initialBuffer titleBuf 0 5
+    let tmp1 = Scr.renderCentralized initialBuffer flowerBuf 0 (-7)
     let tmp2 = Scr.renderCentralized tmp1 menuBuf 0 10
     let tmp3 = Scr.renderInBuffer tmp2 tableBuf 1 3
-    let tmp4 = Scr.renderCentralized tmp3 flowerBuf 0 (-5)
+    let tmp4 = Scr.renderCentralized tmp3 titleBuf 0 5
 
     Scr.printScreen tmp4
 
@@ -47,6 +59,18 @@ printArrow :: [[Char]] -> Int -> [[Char]]
 printArrow [] _ = []
 printArrow (row:rest) 0     = (row ++ " <<<") : rest
 printArrow (row:rest) i     = row : printArrow rest (pred i)
+
+flowerAnimation :: [[Int]] -> Int -> IO()
+flowerAnimation _ 0 = Mv.printMatrixView
+flowerAnimation logoPattern iter = do
+    let initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
+    let patternBuf = Scr.matrixToBuffer logoPattern Scr.solidPxl
+    let finalBuffer = Scr.renderCentralized initialBuffer patternBuf 0 (-7)
+
+    Scr.printScreen finalBuffer
+    threadDelay animationDelay -- espera por um momento
+
+    flowerAnimation (Gol.advanceMatrix logoPattern) (iter-1)
 
 mainLoop :: Int -> IO()
 mainLoop index = do
@@ -65,7 +89,7 @@ mainLoop index = do
                                    cmd -> index
 
     if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 'f' && index == 0 then Mv.printMatrixView -- iniciar jogo
+    else if command == 'f' && index == 0 then flowerAnimation initialLogoMatrix animationIters -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex
