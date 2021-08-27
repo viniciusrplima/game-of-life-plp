@@ -1,14 +1,15 @@
-
 import qualified Screen as Scr
 import qualified MatrixView as Mv
 import qualified PatternSelect as Ps
 import qualified Terminal
 import qualified Patterns as Ptn
+import qualified Gol
+import qualified Credits as Crdt
+import qualified Tutorial as Ttrl
 import System.IO
 import System.IO.Unsafe (unsafeDupablePerformIO)
 import System.Exit
 import Control.Concurrent
-import qualified Gol
 
 title :: [[Char]]
 title = [
@@ -18,7 +19,8 @@ title = [
 menu :: [[Char]]
 menu = [
     "Start   ", 
-    "Records ", 
+    "What is?",
+    "Credits ", 
     "Quit    "]
 
 commandsTable :: [[Char]]
@@ -57,7 +59,7 @@ printMenu menuTab = do
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
 printArrow [] _ = []
-printArrow (row:rest) 0     = (row ++ " <<<") : rest
+printArrow (row:rest) 0     = (" " ++ row ++ " <<<") : rest
 printArrow (row:rest) i     = row : printArrow rest (pred i)
 
 flowerAnimation :: [[Int]] -> Int -> IO()
@@ -74,7 +76,7 @@ flowerAnimation logoPattern iter = do
 
 mainLoop :: Int -> IO()
 mainLoop index = do
-    let maxIndex = 3
+    let maxIndex = 4
 
     printMenu $ printArrow menu index
     
@@ -88,8 +90,11 @@ mainLoop index = do
                                    's' -> ((succ index) + maxIndex) `mod` maxIndex
                                    cmd -> index
 
-    if command == 'f' && index == 2 then exitSuccess   -- desistir da partida
-    else if command == 'f' && index == 0 then flowerAnimation initialLogoMatrix animationIters -- iniciar jogo
+
+    if command == 'f' && index == 3 then exitSuccess   -- desistir da partida
+    else if command =='f' && index == 2 then Crdt.main 
+    else if command == 'f' && index == 1 then Ttrl.main
+    else if command == 'f' && index == 0 then Mv.printMatrixView -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex

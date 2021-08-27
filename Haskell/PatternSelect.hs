@@ -13,8 +13,8 @@ initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
 printMenu menuTab = do
-    let shadow = Scr.createScreenBufferColored 40 25 Scr.shadowPxl
-    let rect = Scr.createScreenBufferColored 40 25 Scr.solidPxl
+    let shadow = Scr.createScreenBufferColored 40 30 Scr.shadowPxl
+    let rect = Scr.createScreenBufferColored 40 30 Scr.solidPxl
     let menuBuf = Scr.createBufferFromStringMatrix menuTab
     let tableBuf = Scr.createBufferFromStringMatrix commandsTable
 
@@ -42,7 +42,7 @@ commandsTable = [
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
 printArrow [] _ = []
-printArrow (row:rest) 0     = (row ++ " <<<") : rest
+printArrow (row:rest) 0     = (" " ++ row ++ " <<<") : rest
 printArrow (row:rest) i     = row : printArrow rest (pred i)
 
 mainLoop :: ([[Int]] -> [[Int]] -> IO()) -> [[Int]] -> Int -> IO()
