@@ -94,7 +94,7 @@ mainLoop index = do
     if command == 'f' && index == 3 then exitSuccess   -- desistir da partida
     else if command =='f' && index == 2 then Crdt.main 
     else if command == 'f' && index == 1 then Ttrl.main
-    else if command == 'f' && index == 0 then Mv.printMatrixView -- iniciar jogo
+    else if command == 'f' && index == 0 then flowerAnimation initialLogoMatrix animationIters -- iniciar jogo
     else putStrLn ""       -- continua no menu
 
     mainLoop newIndex
