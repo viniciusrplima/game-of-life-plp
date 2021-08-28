@@ -37,14 +37,12 @@ printMenu menuTab = do
     let textoBuf = Scr.createBufferFromStringMatrix title
     let menuBuf = Scr.createBufferFromStringMatrix menuTab
     let tableBuf = Scr.createBufferFromStringMatrix commandsTable
-    let matrixBuf = Scr.matrixToBuffer Ptnrls.second Scr.solidPxl
-
+    
     let tmp1 = Scr.renderCentralized initialBuffer textoBuf 0 0
     let tmp2 = Scr.renderCentralized tmp1 menuBuf 0 10
     let tmp3 = Scr.renderInBuffer tmp2 tableBuf 1 3
-    let tmp4 = Scr.renderInBuffer tmp3 matrixBuf 30 10
-
-    Scr.printScreen tmp4 
+    
+    Scr.printScreen tmp3 
 
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
@@ -72,11 +70,11 @@ mainLoop index = do
                                    cmd -> index
     
 
-    if command =='q' then putStrLn " "
-    else if command == 'f' && index == 3 then putStrLn " " 
-    else if command =='f' && index == 2 then  putStrLn " "
-    else if command =='f' && index == 1 then putStrLn " "
-    else if command =='f' && index == 0 then putStrLn " "
+    
+    if command == 'f' && index == 3 then Ptnrls.printRuleFour
+    else if command =='f' && index == 2 then  Ptnrls.printRuleThree 
+    else if command =='f' && index == 1 then Ptnrls.printRuleTwo
+    else if command =='f' && index == 0 then Ptnrls.printRuleOne
     else mainLoop newIndex
 
 
