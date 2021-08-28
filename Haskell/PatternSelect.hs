@@ -11,19 +11,17 @@ import Control.Concurrent
 initialBuffer = Scr.createScreenBuffer Scr.width Scr.height Scr.emptyPxl
 
 -- cria o menu e imprime ele na tela
-printMenu :: [[Char]] -> IO()
-printMenu menuTab = do
-    let shadow = Scr.createScreenBufferColored 40 25 Scr.shadowPxl
-    let rect = Scr.createScreenBufferColored 40 25 Scr.solidPxl
+printMenu :: [[Char]] -> [[Int]] -> IO()
+printMenu menuTab pattern = do
     let menuBuf = Scr.createBufferFromStringMatrix menuTab
     let tableBuf = Scr.createBufferFromStringMatrix commandsTable
+    let patternBuf = Scr.matrixToBuffer pattern Scr.solidPxl
 
-    let tmp1 = Scr.renderInBuffer initialBuffer shadow 15 5
-    let tmp2 = Scr.renderInBuffer tmp1 rect 16 6
-    let tmp3 = Scr.renderInBuffer tmp2 menuBuf 23 10
-    let tmp4 = Scr.renderInBuffer tmp3 tableBuf 1 3
+    let tmp1 = Scr.renderCentralized initialBuffer patternBuf 10 0
+    let tmp2 = Scr.renderInBuffer tmp1 menuBuf 8 8
+    let tmp3 = Scr.renderInBuffer tmp2 tableBuf 1 3
 
-    Scr.printScreen tmp4
+    Scr.printScreen tmp3
 
 -- retorna a lista com todos os nomes dos padroes
 createPatternsList :: [[Char]]
@@ -33,11 +31,9 @@ findPattern :: Int -> [[Int]]
 findPattern idx = snd $ Ptn.patterns !! idx
 
 commandsTable :: [[Char]]
-commandsTable = [
-    "                       ", 
+commandsTable = [ 
     " s / w - mover cursor  ", 
-    " f - selecionar        ",  
-    "                       "]
+    " f - selecionar        "]
 
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
@@ -50,7 +46,7 @@ mainLoop func matrix index = do
     let maxIndex = length Ptn.patterns
     let offset = 0
 
-    printMenu $ printArrow createPatternsList (index + offset)
+    printMenu (printArrow createPatternsList (index + offset)) (findPattern index)
     
     -- pega um unico caracter da entrada
     hSetBuffering stdin NoBuffering
