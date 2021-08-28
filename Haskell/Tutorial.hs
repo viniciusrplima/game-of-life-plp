@@ -25,14 +25,13 @@ texto = [
 
 menu :: [[Char]]
 menu = [
-    "Quais são as regras?", 
-    "Voltar para o menu" 
+    "Quais são as regras?"  
     ]
 
 commandsTable :: [[Char]]
 commandsTable = [
-    " s / w - mover cursor  ", 
-    " f - selecionar        "]
+    " f - selecionar        ",
+    " q - voltar            "]
 
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
@@ -74,10 +73,11 @@ mainLoop index = do
                                    cmd -> index
     
 
-    if command == 'f' && index == 1 then putStrLn " "
-    else if command =='f' && index == 0 then Rls.main
-    else mainLoop newIndex
-
-
+    if command == 'f' && index == 0 then Rls.main
+    else putStrLn " "
+    
+    if command /= 'q' then mainLoop newIndex
+    else putStrLn " "
+    
 main :: IO()
 main = mainLoop 0

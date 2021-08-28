@@ -27,7 +27,7 @@ commandsTable :: [[Char]]
 commandsTable = [
     " s / w - mover cursor  ", 
     " f - selecionar        ",
-    " q - volta para o menu principal"]
+    " q - Voltar"]
 
 -- cria o menu e imprime ele na tela
 printMenu :: [[Char]] -> IO()
@@ -75,9 +75,11 @@ mainLoop index = do
     else if command =='f' && index == 2 then  Ptnrls.printRuleThree 
     else if command =='f' && index == 1 then Ptnrls.printRuleTwo
     else if command =='f' && index == 0 then Ptnrls.printRuleOne
-    else mainLoop newIndex
-
-
-
+    else putStrLn " "
+    
+    if command /= 'q' then mainLoop newIndex
+    else putStrLn " "
+    
+    
 main :: IO()
 main = mainLoop 0

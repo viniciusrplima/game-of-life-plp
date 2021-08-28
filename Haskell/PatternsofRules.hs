@@ -73,7 +73,7 @@ tag = (["Primeira Geração:"],
 
 commandsTable :: [[Char]]
 commandsTable = [
-    " q - volta para as regras"]
+    " q - Voltar"]
 
 
 printRuleOne :: IO()
@@ -100,8 +100,9 @@ printRuleOne = do
     command <- getChar
     hSetBuffering stdin LineBuffering
 
-    if command == 'q' then putStrLn " "
-    else printRuleOne
+      
+    case command of 'q' -> putStrLn " "
+                    cmd -> printRuleOne
     
 
 printRuleTwo :: IO()
@@ -129,8 +130,8 @@ printRuleTwo = do
     command <- getChar
     hSetBuffering stdin LineBuffering
 
-    if command == 'q' then putStrLn " "
-    else printRuleTwo
+    case command of 'q' -> putStrLn " "
+                    cmd -> printRuleTwo
 
 printRuleThree :: IO()
 printRuleThree = do
@@ -156,8 +157,8 @@ printRuleThree = do
     command <- getChar
     hSetBuffering stdin LineBuffering
 
-    if command == 'q' then putStrLn " "
-    else printRuleThree
+    case command of 'q' -> putStrLn " "
+                    cmd -> printRuleThree
 
 printRuleFour :: IO()
 printRuleFour = do
@@ -183,6 +184,6 @@ printRuleFour = do
     command <- getChar
     hSetBuffering stdin LineBuffering
 
-    if command == 'q' then putStrLn " "
-    else printRuleFour
+    case command of 'q' -> putStrLn " "
+                    cmd -> printRuleFour
 
