@@ -38,7 +38,7 @@ commandsTable = [
 -- cria o cursor que fica do lado das opcoes do menu
 printArrow :: [[Char]] -> Int -> [[Char]]
 printArrow [] _ = []
-printArrow (row:rest) 0     = (row ++ " <<<") : rest
+printArrow (row:rest) 0     = (" " ++ row ++ " <<<") : rest
 printArrow (row:rest) i     = row : printArrow rest (pred i)
 
 mainLoop :: ([[Int]] -> [[Int]] -> IO()) -> [[Int]] -> Int -> IO()
