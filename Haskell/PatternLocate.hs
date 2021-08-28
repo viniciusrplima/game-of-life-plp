@@ -42,4 +42,4 @@ locatePatternRec func matrix pattern row col = do
 -- recebe uma funcao de callback que recebe uma matrix
 -- e recebe a matrix e o padrao a ser posicionado
 locatePattern :: ([[Int]] -> IO()) -> [[Int]] -> [[Int]] -> IO()
-locatePattern func matrix pattern = locatePatternRec func matrix pattern 10 10
+locatePattern func matrix pattern = locatePatternRec func matrix pattern 20 15
