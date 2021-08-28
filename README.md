@@ -21,3 +21,6 @@ Então compile o código e depois execute o programa.
 make
 make run
 ```
+## Screenshot
+
+<img src="screenshot.png" width=650/>
