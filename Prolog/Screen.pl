@@ -37,3 +37,15 @@ createScreenBuffer(W, H, C, Buf) :-
     pixel(C, Pxl),
     replicate(Pxl, W, Row), 
     replicate(Row, H, Buf).
+
+
+% *****************************
+%   SCREEN
+% *****************************
+
+% imprime buffer na tela
+printScreen(Buf):-
+    maplist(atomic_list_concat, Buf, RowList),
+    atomic_list_concat(RowList, '\n', BufStr),
+    write(BufStr).
+    
