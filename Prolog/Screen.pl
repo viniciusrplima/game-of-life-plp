@@ -2,16 +2,20 @@
 
 pixelWidth(2).
 
-termWidth(100).
-termHeight(40).
+% largura do terminal
+termWidth(W):- tty_size(W,_).
 
+% altura do terminal
+termHeight(H):- tty_size(_,H).
+
+% largura da tela em pixels
 width(X) :- 
     termWidth(TW),
-    X is div(TW, 2).
+    pixelWidth(PW), 
+    X is div(TW, PW).
 
-height(Y) :- 
-    termHeight(TH),
-    Y is div(TH, 2).
+% altura da tela em pixels
+height(Y) :- termHeight(Y).
 
 % cria um pixel a partir de um character
 pixel(C, X) :- 
