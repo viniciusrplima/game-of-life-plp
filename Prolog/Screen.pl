@@ -1,5 +1,7 @@
 :- include('Utils.pl').
 
+% largura do pixel
+% numero de caracteres por pixel
 pixelWidth(2).
 
 % largura do terminal
