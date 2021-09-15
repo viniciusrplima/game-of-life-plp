@@ -40,17 +40,6 @@ createScreenBuffer(W, H, C, Buf) :-
     replicate(Pxl, W, Row), 
     replicate(Row, H, Buf).
 
-
-% *****************************
-%   SCREEN
-% *****************************
-
-% imprime buffer na tela
-printScreen(Buf):-
-    maplist(atomic_list_concat, Buf, RowList),
-    atomic_list_concat(RowList, '\n', BufStr),
-    write(BufStr).
-
 % retorna o tamanho da maior linha
 bufferWidth(Buf, W):- 
     maplist(length, Buf, Ls), 
@@ -58,6 +47,22 @@ bufferWidth(Buf, W):-
 
 % retorna o numero de linhas
 bufferHeight(Buf, H):- length(Buf, H).
+
+% retorna as dimensoes de um buffer
+bufferSize(Buf, W, H):- 
+    bufferWidth(Buf, W), 
+    bufferHeight(Buf, H).
+
+% renderiza um buffer no centro de outro
+renderInCenter(Src, Tgt, R):- renderCentralized(Src, Tgt, 0, 0, R).
+
+% renderiza um buffer dentro de outro com posicao relativa ao centro
+renderCentralized(Src, Tgt, RowOff, ColOff, R):-
+    bufferSize(Src, SW, SH), 
+    bufferSize(Tgt, TW, TH), 
+    Row is TH // 2 - SH // 2 + RowOff, 
+    Col is TW // 2 - SW // 2 + ColOff, 
+    renderInBuffer(Src, Tgt, Row, Col, R).
 
 % renderiza um buffer dentro do outro
 renderInBuffer(_, [], _, _, []):- !.
@@ -101,6 +106,16 @@ stringToBufferRow(Text, RowList):-
     create_string(' ', Comp, CompStr), 
     atom_concat(Text, CompStr, CompText), 
     stringToBufferRow(CompText, RowList).
+
+% *****************************
+%   SCREEN
+% *****************************
+
+% imprime buffer na tela
+printScreen(Buf):-
+    maplist(atomic_list_concat, Buf, RowList),
+    atomic_list_concat(RowList, '\n', BufStr),
+    write(BufStr).
 
 % ****************************
 %   GOL UTILS
