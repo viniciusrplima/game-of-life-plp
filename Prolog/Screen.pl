@@ -26,9 +26,9 @@ pixel(C, X) :-
     atomic_list_concat(L, X).
 
 % pixels padroes
-emptyPxl(X) :- pixel(' ', X).
-shadowPxl(X) :- pixel('░', X).
-solidPxl(X) :- pixel('█', X).
+emptyPxl(' ').
+shadowPxl('░').
+solidPxl('█').
 
 % *****************************
 %   BUFFERS
@@ -50,4 +50,67 @@ printScreen(Buf):-
     maplist(atomic_list_concat, Buf, RowList),
     atomic_list_concat(RowList, '\n', BufStr),
     write(BufStr).
-    
+
+% retorna o tamanho da maior linha
+bufferWidth(Buf, W):- 
+    maplist(length, Buf, Ls), 
+    max_list(Ls, W).
+
+% retorna o numero de linhas
+bufferHeight(Buf, H):- length(Buf, H).
+
+% renderiza um buffer dentro do outro
+renderInBuffer(_, [], _, _, []):- !.
+renderInBuffer([], Tgt, _, _, Tgt):- !.
+renderInBuffer([SRow|Scr], [TRow|Tgt], 0, Col, R):-
+    renderInBufferRow(SRow, TRow, Col, RRow), 
+    renderInBuffer(Scr, Tgt, 0, Col, Rest), 
+    append([RRow], Rest, R), !.
+renderInBuffer(Src, [TRow|Tgt], Row, Col, R):- 
+    NR is Row - 1, 
+    renderInBuffer(Src, Tgt, NR, Col, Rest),
+    append([TRow], Rest, R), !.
+
+renderInBufferRow(_, [], _, []):- !.
+renderInBufferRow([], Tgt, _, Tgt):- !.
+renderInBufferRow([SPxl|Scr], [_|Tgt], 0, R):-
+    renderInBufferRow(Scr, Tgt, 0, Rest), 
+    append([SPxl], Rest, R), !.
+renderInBufferRow(Scr, [TPxl|Tgt], Col, R):-
+    NC is Col - 1, 
+    renderInBufferRow(Scr, Tgt, NC, Rest), 
+    append([TPxl], Rest, R), !.
+
+% cria um buffer a partir de uma matrix de strings
+createBufferFromStringMatrix(Matrix, Buf):-
+    maplist(stringToBufferRow, Matrix, Buf).
+
+stringToBufferRow("", []):- !.
+stringToBufferRow(Text, RowList):-
+    pixelWidth(PW), 
+    string_length(Text, TL), 
+    TL >= PW, 
+    sub_string(Text, 0, PW, _, Pxl), 
+    sub_string(Text, PW, _, 0, StrRest), 
+    stringToBufferRow(StrRest, Rest), 
+    append([Pxl], Rest, RowList), !.
+stringToBufferRow(Text, RowList):-
+    pixelWidth(PW), 
+    string_length(Text, TL), 
+    Comp is PW - TL, 
+    create_string(' ', Comp, CompStr), 
+    atom_concat(Text, CompStr, CompText), 
+    stringToBufferRow(CompText, RowList).
+
+% ****************************
+%   GOL UTILS
+% ****************************
+
+matrixToBuffer(PixelContent, Matrix, Buffer):-
+    maplist(matrixToBufferRow(PixelContent), Matrix, Buffer), !.
+
+matrixToBufferRow(PixelContent, MatRow, BufRow):-
+    maplist(createPixelFromGolCell(PixelContent), MatRow, BufRow).
+
+createPixelFromGolCell(PixelContent, 1, Pixel):- pixel(PixelContent, Pixel).
+createPixelFromGolCell(_, _, Pixel):- pixel(" ", Pixel).
