@@ -1,3 +1,4 @@
+:- initialization(main).
 :- include('Screen.pl').
 :- include('Patterns.pl').
 :- include('Gol.pl').
@@ -70,7 +71,7 @@ mainLoop(Index):-
      Key = 'f', Index =:= 0, write("Coisa que acontece no start");
      Key = 'f', Index =:= 1, write("Coisa que acontece no What is");
      Key = 'f', Index =:= 2, credits;
-     Key = 'f', Index =:= 3, write("Coisa que acontece no exit")),
+    Key = 'f', Index =:= 3, halt),
 
     mainLoop(NewIndex).
     
