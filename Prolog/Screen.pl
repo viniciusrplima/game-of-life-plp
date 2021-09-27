@@ -1,14 +1,13 @@
-:- include('Utils.pl').
 
 % largura do pixel
 % numero de caracteres por pixel
 pixelWidth(2).
 
 % largura do terminal
-termWidth(W):- tty_size(W,_).
+termWidth(W):- tty_size(_,W).
 
 % altura do terminal
-termHeight(H):- tty_size(_,H).
+termHeight(H):- tty_size(H,_).
 
 % largura da tela em pixels
 width(X) :- 

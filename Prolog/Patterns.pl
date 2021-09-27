@@ -1,4 +1,3 @@
-:- include('Screen.pl').
 
 
 pattern('Glider',   [
