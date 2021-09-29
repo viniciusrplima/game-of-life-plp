@@ -1,3 +1,6 @@
+:- initialization(main).
+:- include('Utils.pl').
+:- include('Screen.pl').
 texto([
     "Projeto para disciplina Paradigmas de Linguagens de Programação, ministrada pelo professor Everton Alves.", 
     "  ", 
@@ -33,8 +36,8 @@ printCredits:-
     createBufferFromStringMatrix(MenuCredit, MenuBuf),
     createBufferFromStringMatrix(CommandsTableCredit, TableBuf),
 
-    renderCentralized(TextoBuf,InitialBuffer, 1, 0, Tmp1),
-    renderCentralized(MenuBuf, Tmp1, 10, 0, Tmp2),
+    renderCentralized(TextoBuf,InitialBuffer, -1, 0, Tmp1),
+    renderCentralized(MenuBuf, Tmp1, 14, 0, Tmp2),
     renderInBuffer(TableBuf, Tmp2, 3, 1, Tmp3),
   
     printScreen(Tmp3).
