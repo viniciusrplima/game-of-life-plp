@@ -2,6 +2,7 @@
 
 
 
+
 first([[1]],[[0]]).
 
 second([[0,0,0,0,0],
@@ -54,95 +55,113 @@ tag(["Primeira Geração:"],
 comandsTable( [
     " q - Voltar"]).
 
-printRuleOne(_):-
-first(fst),
-first(snd),
-tag(T),
-firstExplanation(forE),
-commandsTable(CT),
-createScreenBuffer(width, height, emptyPxl, initialBuffer ),
-createBufferFromStringMatrix(CT, tableBuf),
-matrixToBuffer(fst, solidPxl, matrixBuf),
-matrixToBuffer(snd, solidPxl, sndMatrixBuf),
-createBufferFromStringMatrix(forE, explanationBuf),
-createBufferFromStringMatrix(T, fstText),
-createBufferFromStringMatrix(T, sndText),
+printRuleOne():-
+    first(fst),
+    first(snd),
+    tag(T),
+    firstExplanation(forE),
+    commandsTable(CT),
+    createScreenBuffer(width, height, emptyPxl, initialBuffer ),
+    createBufferFromStringMatrix(CT, tableBuf),
+    matrixToBuffer(fst, solidPxl, matrixBuf),
+    matrixToBuffer(snd, solidPxl, sndMatrixBuf),
+    createBufferFromStringMatrix(forE, explanationBuf),
+    createBufferFromStringMatrix(T, fstText),
+    createBufferFromStringMatrix(T, sndText),
 
-renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
-renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
-renderInBuffer(tmp2, explanationBuf, 10, 30, tmp3),
-renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
-renderInBuffer(tmp4, fstText, 5, 10, tmp5),
-renderInBuffer(tmp5, sndText, 5, 20, tmp6),
-printScreen(tmp6).
+    renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
+    renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
+    renderInBuffer(tmp2, explanationBuf, 10, 30, tmp3),
+    renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
+    renderInBuffer(tmp4, fstText, 5, 10, tmp5),
+    renderInBuffer(tmp5, sndText, 5, 20, tmp6),
+    printScreen(tmp6),
 
+    read(command),
 
-printRuleTwo(_):-
-second(fst),
-second(snd),
-tag(T),
-secondExplanation(forE),
-commandsTable(CT),
-createScreenBuffer(width, height, emptyPxl, initialBuffer ),
-createBufferFromStringMatrix(CT, tableBuf),
-matrixToBuffer(fst, solidPxl, matrixBuf),
-matrixToBuffer(snd, solidPxl, sndMatrixBuf),
-createBufferFromStringMatrix(forE, explanationBuf),
-createBufferFromStringMatrix(T, fstText),
-createBufferFromStringMatrix(T, sndText),
-
-renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
-renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
-renderInBuffer(tmp2, explanationBuf, 4, 30, tmp3),
-renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
-renderInBuffer(tmp4, fstText, 5, 10, tmp5),
-renderInBuffer(tmp5, sndText, 5, 20, tmp6),
-printScreen(tmp6).
+    (command = 'q'; printRuleOne ).
 
 
-printRuleThree(_):-
-third(fst),
-third(snd),
-tag(T),
-thirdExplanation(forE),
-commandsTable(CT),
-createScreenBuffer(width, height, emptyPxl, initialBuffer ),
-createBufferFromStringMatrix(CT, tableBuf),
-matrixToBuffer(fst, solidPxl, matrixBuf),
-matrixToBuffer(snd, solidPxl, sndMatrixBuf),
-createBufferFromStringMatrix(forE, explanationBuf),
-createBufferFromStringMatrix(T, fstText),
-createBufferFromStringMatrix(T, sndText),
 
-renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
-renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
-renderInBuffer(tmp2, explanationBuf, 2, 30, tmp3),
-renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
-renderInBuffer(tmp4, fstText, 5, 10, tmp5),
-renderInBuffer(tmp5, sndText, 5, 20, tmp6),
-printScreen(tmp6).
 
-printRuleFour(_):-
-fourth(fst),
-fourth(snd),
-tag(T),
-fourthExplanation(forE),
-commandsTable(CT),
-createScreenBuffer(width, height, emptyPxl, initialBuffer ),
-createBufferFromStringMatrix(CT, tableBuf),
-matrixToBuffer(fst, solidPxl, matrixBuf),
-matrixToBuffer(snd, solidPxl, sndMatrixBuf),
-createBufferFromStringMatrix(forE, explanationBuf),
-createBufferFromStringMatrix(T, fstText),
-createBufferFromStringMatrix(T, sndText),
+printRuleTwo():-
+    second(fst),
+    second(snd),
+    tag(T),
+    secondExplanation(forE),
+    commandsTable(CT),
+    createScreenBuffer(width, height, emptyPxl, initialBuffer ),
+    createBufferFromStringMatrix(CT, tableBuf),
+    matrixToBuffer(fst, solidPxl, matrixBuf),
+    matrixToBuffer(snd, solidPxl, sndMatrixBuf),
+    createBufferFromStringMatrix(forE, explanationBuf),
+    createBufferFromStringMatrix(T, fstText),
+    createBufferFromStringMatrix(T, sndText),
 
-renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
-renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
-renderInBuffer(tmp2, explanationBuf, 5, 30, tmp3),
-renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
-renderInBuffer(tmp4, fstText, 5, 10, tmp5),
-renderInBuffer(tmp5, sndText, 5, 20, tmp6),
-printScreen(tmp6).
+    renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
+    renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
+    renderInBuffer(tmp2, explanationBuf, 4, 30, tmp3),
+    renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
+    renderInBuffer(tmp4, fstText, 5, 10, tmp5),
+    renderInBuffer(tmp5, sndText, 5, 20, tmp6),
+    printScreen(tmp6),
+
+    read(command),
+
+    (command = 'q'; printRuleTwo ).
+
+
+printRuleThree():-
+    third(fst),
+    third(snd),
+    tag(T),
+    thirdExplanation(forE),
+    commandsTable(CT),
+    createScreenBuffer(width, height, emptyPxl, initialBuffer ),
+    createBufferFromStringMatrix(CT, tableBuf),
+    matrixToBuffer(fst, solidPxl, matrixBuf),
+    matrixToBuffer(snd, solidPxl, sndMatrixBuf),
+    createBufferFromStringMatrix(forE, explanationBuf),
+    createBufferFromStringMatrix(T, fstText),
+    createBufferFromStringMatrix(T, sndText),
+
+    renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
+    renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
+    renderInBuffer(tmp2, explanationBuf, 2, 30, tmp3),
+    renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
+    renderInBuffer(tmp4, fstText, 5, 10, tmp5),
+    renderInBuffer(tmp5, sndText, 5, 20, tmp6),
+    printScreen(tmp6),
+
+    read(command),
+
+    (command = 'q'; printRuleThree ).
+
+printRuleFour():-
+    fourth(fst),
+    fourth(snd),
+    tag(T),
+    fourthExplanation(forE),
+    commandsTable(CT),
+    createScreenBuffer(width, height, emptyPxl, initialBuffer ),
+    createBufferFromStringMatrix(CT, tableBuf),
+    matrixToBuffer(fst, solidPxl, matrixBuf),
+    matrixToBuffer(snd, solidPxl, sndMatrixBuf),
+    createBufferFromStringMatrix(forE, explanationBuf),
+    createBufferFromStringMatrix(T, fstText),
+    createBufferFromStringMatrix(T, sndText),
+
+    renderInBuffer(initialBuffer, tableBuf, 1, 3, tmp1),
+    renderInBuffer(tmp1, matrixBuf, 30, 10, tmp2),
+    renderInBuffer(tmp2, explanationBuf, 5, 30, tmp3),
+    renderInBuffer(tmp3, sndMatrixBuf, 30, 20, tmp4),
+    renderInBuffer(tmp4, fstText, 5, 10, tmp5),
+    renderInBuffer(tmp5, sndText, 5, 20, tmp6),
+    printScreen(tmp6),
+
+    read(command),
+
+    (command = 'q'; printRuleFour ).
 
 
 
