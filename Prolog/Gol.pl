@@ -13,7 +13,7 @@ otherCell(2). % usado para diferenciar celulas
 createEmptyMatrix(W, H, Mat):-
     deadCell(C),
     replicate(C, W, Row), 
-    replicate(Row, H, Mat).
+    replicate(Row, H, Mat), !.
 
 matrixSize(Mat, W, H):-
     nth0(0, Mat, FRow), 
@@ -67,16 +67,16 @@ calculateNextCellState(Mat, Row, Col, NextState):-
 doCalculateNextCellState(State, Neighbors, NextState):- 
     liveCell(State), 
     Neighbors < 2, 
-    deadCell(NextState).
+    deadCell(NextState), !.
 doCalculateNextCellState(State, Neighbors, NextState):- 
     liveCell(State), 
-    Neighbors > 2, 
-    deadCell(NextState).
+    Neighbors > 3, 
+    deadCell(NextState), !.
 doCalculateNextCellState(State, Neighbors, NextState):- 
     deadCell(State), 
     Neighbors =:= 3, 
-    liveCell(NextState).
-doCalculateNextCellState(State, _, State).
+    liveCell(NextState), !.
+doCalculateNextCellState(State, _, State):- !.
 
 % atualiza matriz e retorna seu proximo estado
 advanceMatrix(Mat, R):-
@@ -165,3 +165,4 @@ rotateMatrixRight(Mat, R):- reverse(Mat, Tmp), transpose(Tmp, R).
 
 % rotaciona matriz para a direita
 rotateMatrixLeft(Mat, R):- transpose(Mat, Tmp), reverse(Tmp, R).
+

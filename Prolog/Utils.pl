@@ -21,3 +21,7 @@ waitKey(ValidKeys, ReturnedKey) :-
     ReturnedKey = Y;
     waitKey(ValidKeys, K), ReturnedKey = K).
 
+get_key(X):-
+    ttyflush, 
+    get_single_char(Y), 
+    atom_char(X, Y).

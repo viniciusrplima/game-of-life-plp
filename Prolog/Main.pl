@@ -1,8 +1,10 @@
 :- initialization(main).
+:- include('Utils.pl').
 :- include('Screen.pl').
 :- include('Patterns.pl').
 :- include('Gol.pl').
 :- include('Credits').
+:- include('MatrixView').
 
 
 title(["█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █▀▀   █   █ █▀▀ █▀▀", 
@@ -26,7 +28,7 @@ printMenu(MenuTab):-
     solidPxl(SolidPxl),
     title(Title),
     commandsTable(CommandsTable),
-    pattern('Glider Flower', GliderFlower),
+    pattern("Glider Flower", GliderFlower),
     createEmptyMatrix(10, 10, LargeMatrix),
     mergeMatrixCentralized(GliderFlower,LargeMatrix,InitialLogoMatrix),
     matrixToBuffer(SolidPxl, InitialLogoMatrix, FlowerBuf),
@@ -68,7 +70,7 @@ mainLoop(Index):-
     
     (Key = 'w', NewIndex = ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex = ((Index + 1) + MaxIndex) mod MaxIndex;
-     Key = 'f', Index =:= 0, write("Coisa que acontece no start");
+     Key = 'f', Index =:= 0, matrixView;
      Key = 'f', Index =:= 1, write("Coisa que acontece no What is");
      Key = 'f', Index =:= 2, credits;
     Key = 'f', Index =:= 3, halt),
