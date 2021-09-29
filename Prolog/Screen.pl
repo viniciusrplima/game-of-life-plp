@@ -18,6 +18,11 @@ width(X) :-
 % altura da tela em pixels
 height(Y) :- termHeight(Y).
 
+% tamanho da tela em pixels
+screenSize(X, Y):-
+    width(X), 
+    height(Y).
+
 % cria um pixel a partir de um character
 pixel(C, X) :- 
     pixelWidth(PW),
