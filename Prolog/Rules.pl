@@ -1,4 +1,5 @@
 :- include('Screen.pl').
+:- include('PatternsofRules').
 
 title( ["Seleciona alguma regra para ver sua exemplificação"]).
 
@@ -61,6 +62,8 @@ outSelect(_, _):- write(' ').
 
 loopDecision('q',_):- write(' ').
 loopDecision(_, NewIndix):- mainLoop(NewIndix).
+
+mainRules():- mainLoop(0).
 
 
 
