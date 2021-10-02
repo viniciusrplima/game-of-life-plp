@@ -1,6 +1,3 @@
-:- initialization(main).
-:- include('Utils.pl').
-:- include('Screen.pl').
 texto([
     "Projeto para disciplina Paradigmas de Linguagens de Programação, ministrada pelo professor Everton Alves.", 
     "  ", 
@@ -47,4 +44,4 @@ credits:-
     printCredits,
     waitKey(['f'], Key),  
     Key = 'f',
-    main.
+    mainLoop(2).

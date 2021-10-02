@@ -1,4 +1,4 @@
-:- include('Utils.pl').
+
 :- use_module(library(clpfd)).
 
 % ****************************
