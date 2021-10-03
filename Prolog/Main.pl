@@ -43,10 +43,9 @@ printMenu(MenuTab):-
     renderInBuffer(TableBuf, Tmp2, 3, 1, Tmp3),
     renderCentralized(FlowerBuf, Tmp3, (-7), 0, Tmp4),
     
-    printScreen(Tmp4).
+    printScreen(Tmp4), !.
 
 printArrow([],_,[]).
-
 printArrow([Row|Rest],I,R):-
     (I =:= 0, 
      string_concat(Row," <<<",X),
@@ -57,23 +56,24 @@ printArrow([Row|Rest],I,R):-
      printArrow(Rest, N, Z),
      R = [Row|Z]).
 
-animationDelay(30000).
 
-flowerAnimation(0, Matx, printMatrixView(Matx)).
-flowerAnimation(Int, Matx, Retorn):-
+flowerAnimation(0, _):- matrixView.
+flowerAnimation(Int, Matx):-
     
     width(Width),
     height(Height),
     emptyPxl(EmptyPxl),
     solidPxl(SolidPxl),
     createScreenBuffer(Width, Height, EmptyPxl, Initialbuffer),
-    matrixToBuffer(Matx, SolidPxl, PatternBuf),
-    renderCentralized(Initialbuffer, PatternBuf, 0, (-7), FinalBuffer),
+    matrixToBuffer(SolidPxl, Matx, PatternBuf),
+    renderCentralized(PatternBuf, Initialbuffer, 0, (-7), FinalBuffer),
 
     printScreen(FinalBuffer),
-    sleep(animationDelay),
+    sleep(0.1),
 
-    flowerAnimation((Int-1), advanceMatrix(Matx), Retorn).
+    advanceMatrix(Matx, NewMat),
+    NIndex is Int - 1, 
+    flowerAnimation(NIndex, NewMat).
 
 
 mainLoop(Index):-
@@ -83,15 +83,14 @@ mainLoop(Index):-
     printArrow(Menu, Index, MenuTab),
     printMenu(MenuTab),
     pattern("Glider Flower", GliderFlower),
-    createEmptyMatrix(10, 10, LargeMatrix),
+    createEmptyMatrix(15, 15, LargeMatrix),
     mergeMatrixCentralized(GliderFlower,LargeMatrix,InitialLogoMatrix),
-    flowerAnimation(30, InitialLogoMatrix, Retorn),
 
     waitKey(['w','s','f'], Key),  
     
     (Key = 'w', NewIndex = ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex = ((Index + 1) + MaxIndex) mod MaxIndex;
-     Key = 'f', Index =:= 0, Retorn, matrixView;
+     Key = 'f', Index =:= 0, flowerAnimation(15, InitialLogoMatrix);
      Key = 'f', Index =:= 1, write("Coisa que acontece no What is");
      Key = 'f', Index =:= 2, credits;
     Key = 'f', Index =:= 3, halt),
