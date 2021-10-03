@@ -57,6 +57,24 @@ printArrow([Row|Rest],I,R):-
      printArrow(Rest, N, Z),
      R = [Row|Z]).
 
+animationDelay(30000).
+
+flowerAnimation(0, Matx, printMatrixView(Matx)).
+flowerAnimation(Int, Matx, Retorn):-
+    
+    width(Width),
+    height(Height),
+    emptyPxl(EmptyPxl),
+    solidPxl(SolidPxl),
+    createScreenBuffer(Width, Height, EmptyPxl, Initialbuffer),
+    matrixToBuffer(Matx, SolidPxl, PatternBuf),
+    renderCentralized(Initialbuffer, PatternBuf, 0, (-7), FinalBuffer),
+
+    printScreen(FinalBuffer),
+    sleep(animationDelay),
+
+    flowerAnimation((Int-1), advanceMatrix(Matx), Retorn).
+
 
 mainLoop(Index):-
 
@@ -64,13 +82,16 @@ mainLoop(Index):-
     menu(Menu),
     printArrow(Menu, Index, MenuTab),
     printMenu(MenuTab),
-    
+    pattern("Glider Flower", GliderFlower),
+    createEmptyMatrix(10, 10, LargeMatrix),
+    mergeMatrixCentralized(GliderFlower,LargeMatrix,InitialLogoMatrix),
+    flowerAnimation(30, InitialLogoMatrix, Retorn),
 
     waitKey(['w','s','f'], Key),  
     
     (Key = 'w', NewIndex = ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex = ((Index + 1) + MaxIndex) mod MaxIndex;
-     Key = 'f', Index =:= 0, matrixView;
+     Key = 'f', Index =:= 0, Retorn, matrixView;
      Key = 'f', Index =:= 1, write("Coisa que acontece no What is");
      Key = 'f', Index =:= 2, credits;
     Key = 'f', Index =:= 3, halt),

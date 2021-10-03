@@ -1,3 +1,6 @@
+:- include('Screen.pl').
+:- include('Gol.pl').
+:- include('Patterns.pl').
 
 matrixCmdTable([
     " f - avancar                    ", 

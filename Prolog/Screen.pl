@@ -1,3 +1,4 @@
+:- include('Utils.pl').
 
 % largura do pixel
 % numero de caracteres por pixel
