@@ -134,3 +134,21 @@ matrixToBufferRow(PixelContent, MatRow, BufRow):-
 
 createPixelFromGolCell(PixelContent, 1, Pixel):- pixel(PixelContent, Pixel).
 createPixelFromGolCell(_, _, Pixel):- pixel(" ", Pixel).
+
+matrixToBufferHighlight(Matrix, Buffer):-
+    maplist(matrixToBufferRowHighlight, Matrix, Buffer), !.
+
+matrixToBufferRowHighlight(MatRow, BufRow):-
+    maplist(createPixelFromGolCellHighlight, MatRow, BufRow).
+
+createPixelFromGolCellHighlight(Cell, Pixel):-
+    liveCell(Cell), 
+    solidPxl(PixelContent), 
+    pixel(PixelContent, Pixel).
+createPixelFromGolCellHighlight(Cell, Pixel):- 
+    otherCell(Cell), 
+    shadowPxl(PixelContent), 
+    pixel(PixelContent, Pixel).
+createPixelFromGolCellHighlight(_, Pixel):- 
+    emptyPxl(PixelContent), 
+    pixel(PixelContent, Pixel).

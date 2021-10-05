@@ -1,6 +1,3 @@
-:- include('Screen.pl').
-:- include('Gol.pl').
-:- include('Patterns.pl').
 
 matrixCmdTable([
     " f - avancar                    ", 
@@ -24,11 +21,13 @@ matrixViewLoop(Mat):-
     advanceMatrix(Mat, NewMat), 
     get_key(Key),
 
+    pattern("Dart", Ptn), 
+
     ( Key = 'q', main;
-      Key = 'f', matrixViewLoop(NewMAt);
-      Key = 's', writeln("pagina de selecao");
+      Key = 'f', matrixViewLoop(NewMat);
+      Key = 's', patternLocate(Mat, Ptn);
       Key = 'c', screenSize(W, H), createEmptyMatrix(W, H, EmpMat), matrixViewLoop(EmpMat);
-      matrixViewLoop(NewMat)), !.
+      matrixViewLoop(Mat)), !.
 
 matrixView:- 
     screenSize(W, H), 

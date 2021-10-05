@@ -213,7 +213,7 @@ pattern("R-pentomino",   [
                [0, 1, 0, 0],
                [0, 0, 0, 0]]).
 
-pattern( "Puffer 1",  [
+pattern("Puffer 1",  [
            [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0],
            [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
            [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
@@ -225,7 +225,7 @@ pattern( "Puffer 1",  [
 
 
 
-pattern( "Puffer 2",[
+pattern("Puffer 2",[
            [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
            [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
@@ -264,7 +264,7 @@ pattern("Glider Flower",[
 patternsNames([
     "Glider",
     "Dart",
-    "64P2H1V0",
+    "_64P2H1V0",
     "Brain",
     "Turtle",
     "Sidecar",
@@ -275,7 +275,7 @@ patternsNames([
     "Hammerhead",
     "Lightweight Spaceship",
     "Loafer",
-    "Copperhead ",
+    "Copperhead",
     "B-heptomino",
     "Pi-heptomino",
     "Middleweight Spaceship",

@@ -5,6 +5,7 @@
 :- include('Gol.pl').
 :- include('Credits').
 :- include('MatrixView').
+:- include('PatternLocate.pl').
 
 
 title(["█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █▀▀   █   █ █▀▀ █▀▀", 
