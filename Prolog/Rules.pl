@@ -1,76 +1,65 @@
-:- include('Screen.pl').
-:- include('PatternsofRules').
+titleRules( ["Selecione alguma regra para ver sua exemplificação"]).
 
-title( ["Seleciona alguma regra para ver sua exemplificação"]).
-
-menu( [
+menuRules( [
     "1. Qualquer célula viva com menos de dois vizinhos vivos morre de solidão             ",
     "2. Qualquer célula viva com mais de três vizinhos vivos morre de superpopulação       ",
     "3. Qualquer célula com exatamente três vizinhos vivos se torna uma célula viva        ",
     "4. Qualquer célula com dois vizinhos vivos continua no mesmo estado na próxima geração"]).
 
-commandsTable([
+commandsTableRules([
     " s / w - mover cursor  ",
     " f - selecionar        ",
     " q - Voltar"]).
 
-printMenu(menuTab):-
-title(T),
-commandsTable(CT),
-createScreenBuffer(width, height, emptyPxl, initialBuffer ),
-createBufferFromStringMatrix(T, textoBuf),
-createBufferFromStringMatrix(menuTab, menuBuf),
-createBufferFromStringMatrix(CT, tableBuf),
 
-renderCentralized(initialBuffer, textoBuf, 0, 0, tmp1),
-renderCentralized(tmp1, menuBuf, 0, 10, tmp2),
-renderInBuffer(tmp2, tableBuf, 1, 3, tmp3),
-printScreen(tmp3).
+printRules(MenuTab):-
 
+    titleRules(TitleRules),
+    commandsTableRules(CommandsTable),
+    width(Width),
+    height(Height),
+    emptyPxl(EmptyPxl),
 
-printArrow([ _], _, List2):- List2 is [_].
-printArrow([row|rest], 0, List2):- List2 is (' '+ row + ' <<<') | rest.
-printArrow([row|rest], i, List2):- printArrow(rest, i-1,List3),
-List2 is row | List3.
+    createScreenBuffer(Width, Height, EmptyPxl, InitialBuffer),
+    createBufferFromStringMatrix(TitleRules, TextoBuf),
+    createBufferFromStringMatrix(MenuTab, MenuBuf),
+    createBufferFromStringMatrix(CommandsTable, TableBuf),
 
-
-mainLoop(indix):-
-    menu(M),
-    first(primeiroExemplo),
-    second(segundoExemplo),
-    third(terceiroExemplo),
-    fourth(quartoExemplo),
-    printArrow(M, indix, pa),
-    printMenu(pa),
-
-    read(command),
-
-    recalculate(command, indix, newIndix),
-
-    outSelect(command, indix),
-    loopDecision(command, indix).
-
-recalculate('w', Indix, NewIndix):-  NewIndix = ((Indix-1) + 4) mod 4.
-recalculate('s', Indix, NewIndix):-  NewIndix is ((Indix+1) + 4) mod 4.
-recalculate(_, Indix, NewIndix):- NewIndix is Indix.
-
-outSelect('f', 3):- printRuleFour.
-outSelect('f', 2):- printRuleThree .
-outSelect('f', 1):- printRuleTwo.
-outSelect('f', 0):- printRuleOne.
-outSelect(_, _):- write(' ').
-
-loopDecision('q',_):- write(' ').
-loopDecision(_, NewIndix):- mainLoop(NewIndix).
-
-mainRules():- mainLoop(0).
+    renderCentralized(TextoBuf, InitialBuffer, 0, 0, Tmp1),
+    renderCentralized(MenuBuf, Tmp1, 10, 0, Tmp2),
+    renderInBuffer(TableBuf, Tmp2, 3, 1, Tmp3),
+    printScreen(Tmp3).
 
 
+rulesLoop(Index):-
 
+    menuRules(Menu),
+    MaxIndex = 4,
+    printArrow(Menu, Index, MenuTab),
+    printRules(MenuTab),
 
+    firstExplanation(FirstExplanation),
+    firstPattern(First, FirstSn),
+    secondExplanation(SecondExplanation),
+    secondPattern(Second, SecondSnd),
+    thirdExplanation(ThirdExplanation),
+    thirdPattern(Third, ThirdSnd),
+    fourthExplanation(FourthExplanation),
+    fourthPattern(Fourth, FourthSnd),
 
+    waitKey(['q','w','s','f'], Key),  
+    
+    (Key = 'w', NewIndex is((Index - 1) + MaxIndex) mod MaxIndex;
+	 Key = 's', NewIndex is ((Index + 1) + MaxIndex) mod MaxIndex;
+     Key = 'q', tutorial;
+     Key = 'f', Index =:= 0, printExplanation(FirstExplanation, First, FirstSnd, 10);
+     Key = 'f', Index =:= 1, printExplanation(SecondExplanation, Second, SecondSnd, 4);
+     Key = 'f', Index =:= 2, printExplanation(ThirdExplanation, Third, ThirdSnd, 2);
+     Key = 'f', Index =:= 3, printExplanation(FourthExplanation, Fourth, FourthSnd, 5)),
+    
+    rulesLoop(NewIndex).
 
-
+rules:- rulesLoop(0).
 
 
 

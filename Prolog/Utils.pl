@@ -25,3 +25,15 @@ get_key(X):-
     ttyflush, 
     get_single_char(Y), 
     atom_char(X, Y).
+
+
+printArrow([],_,[]).
+printArrow([Row|Rest],I,R):-
+    (I =:= 0, 
+     string_concat(Row," <<<",X),
+     string_concat(" ", X, Z),
+     R = [Z|Rest];
+     N is I-1,
+     I >=0,
+     printArrow(Rest, N, Z),
+     R = [Row|Z]).

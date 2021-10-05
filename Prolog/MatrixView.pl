@@ -22,10 +22,10 @@ matrixViewLoop(Mat):-
     get_key(Key),
 
     ( Key = 'q', main;
-      Key = 'f', matrixViewLoop(NewMAt);
-      Key = 's', writeln("pagina de selecao");
+      Key = 'f', matrixViewLoop(NewMat);
+      Key = 's', patternSelect;
       Key = 'c', screenSize(W, H), createEmptyMatrix(W, H, EmpMat), matrixViewLoop(EmpMat);
-      matrixViewLoop(NewMat)), !.
+      matrixViewLoop(NewMat)).
 
 matrixView:- 
     screenSize(W, H), 

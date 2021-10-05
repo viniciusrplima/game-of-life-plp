@@ -5,6 +5,10 @@
 :- include('Gol.pl').
 :- include('Credits').
 :- include('MatrixView').
+:- include("PatternSelect.pl").
+:- include("Tutorial.pl").
+:- include("PatternsOfRules.pl").
+:- include("Rules.pl").
 
 
 title(["█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █▀▀   █   █ █▀▀ █▀▀", 
@@ -18,8 +22,6 @@ menu(["Start   ",
 commandsTable([" s / w - mover cursor  ", 
                " f - selecionar        "]).
                    
-
-   
 printMenu(MenuTab):-
 
     width(Width),
@@ -45,18 +47,6 @@ printMenu(MenuTab):-
     
     printScreen(Tmp4).
 
-printArrow([],_,[]).
-
-printArrow([Row|Rest],I,R):-
-    (I =:= 0, 
-     string_concat(Row," <<<",X),
-     string_concat(" ", X, Z),
-     R = [Z|Rest];
-     N is I-1,
-     I >=0,
-     printArrow(Rest, N, Z),
-     R = [Row|Z]).
-
 
 mainLoop(Index):-
 
@@ -71,9 +61,9 @@ mainLoop(Index):-
     (Key = 'w', NewIndex = ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex = ((Index + 1) + MaxIndex) mod MaxIndex;
      Key = 'f', Index =:= 0, matrixView;
-     Key = 'f', Index =:= 1, write("Coisa que acontece no What is");
+     Key = 'f', Index =:= 1, tutorial;
      Key = 'f', Index =:= 2, credits;
-    Key = 'f', Index =:= 3, halt),
+     Key = 'f', Index =:= 3, halt),
 
     mainLoop(NewIndex).
     
