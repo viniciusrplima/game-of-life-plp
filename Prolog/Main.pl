@@ -9,6 +9,7 @@
 :- include("Tutorial.pl").
 :- include("PatternsOfRules.pl").
 :- include("Rules.pl").
+:- include('PatternLocate.pl').
 
 
 title(["█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █▀▀   █   █ █▀▀ █▀▀", 
@@ -45,7 +46,25 @@ printMenu(MenuTab):-
     renderInBuffer(TableBuf, Tmp2, 3, 1, Tmp3),
     renderCentralized(FlowerBuf, Tmp3, (-7), 0, Tmp4),
     
-    printScreen(Tmp4).
+    printScreen(Tmp4), !.
+
+flowerAnimation(0, _):- matrixView.
+flowerAnimation(Int, Matx):-
+    
+    width(Width),
+    height(Height),
+    emptyPxl(EmptyPxl),
+    solidPxl(SolidPxl),
+    createScreenBuffer(Width, Height, EmptyPxl, Initialbuffer),
+    matrixToBuffer(SolidPxl, Matx, PatternBuf),
+    renderCentralized(PatternBuf, Initialbuffer, 0, (-7), FinalBuffer),
+
+    printScreen(FinalBuffer),
+    sleep(0.1),
+
+    advanceMatrix(Matx, NewMat),
+    NIndex is Int - 1, 
+    flowerAnimation(NIndex, NewMat).
 
 
 mainLoop(Index):-
@@ -54,13 +73,15 @@ mainLoop(Index):-
     menu(Menu),
     printArrow(Menu, Index, MenuTab),
     printMenu(MenuTab),
-    
+    pattern("Glider Flower", GliderFlower),
+    createEmptyMatrix(15, 15, LargeMatrix),
+    mergeMatrixCentralized(GliderFlower,LargeMatrix,InitialLogoMatrix),
 
     waitKey(['w','s','f'], Key),  
     
     (Key = 'w', NewIndex = ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex = ((Index + 1) + MaxIndex) mod MaxIndex;
-     Key = 'f', Index =:= 0, matrixView;
+     Key = 'f', Index =:= 0, flowerAnimation(15, InitialLogoMatrix);
      Key = 'f', Index =:= 1, tutorial;
      Key = 'f', Index =:= 2, credits;
      Key = 'f', Index =:= 3, halt),

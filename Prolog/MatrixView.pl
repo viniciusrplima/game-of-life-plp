@@ -21,11 +21,13 @@ matrixViewLoop(Mat):-
     advanceMatrix(Mat, NewMat), 
     get_key(Key),
 
+    pattern("Dart", Ptn), 
+
     ( Key = 'q', main;
       Key = 'f', matrixViewLoop(NewMat);
       Key = 's', patternSelect;
       Key = 'c', screenSize(W, H), createEmptyMatrix(W, H, EmpMat), matrixViewLoop(EmpMat);
-      matrixViewLoop(NewMat)).
+      matrixViewLoop(Mat)).
 
 matrixView:- 
     screenSize(W, H), 
