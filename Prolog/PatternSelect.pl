@@ -22,7 +22,7 @@ printPatternSelect(MenuTab, Pattern):-
 
     printScreen(Tmp3).
 
-selectLoop(Index):-
+selectLoop(Mat, Index):-
 
     patternsNames(PatternsNames),
     MaxIndex = 23,
@@ -38,9 +38,9 @@ selectLoop(Index):-
     
     (Key = 'w', NewIndex is ((Index - 1) + MaxIndex) mod MaxIndex;
 	 Key = 's', NewIndex is ((Index + 1) + MaxIndex) mod MaxIndex;
-     Key = 'f', write("seleciona")),
+     Key = 'f', patternLocate(Mat, Pattern)),
     
-    selectLoop(NewIndex).
+    selectLoop(Mat, NewIndex).
     
- patternSelect:- selectLoop(0).
+ patternSelect(Mat):- selectLoop(Mat, 0).
 

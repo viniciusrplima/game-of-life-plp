@@ -25,7 +25,7 @@ matrixViewLoop(Mat):-
 
     ( Key = 'q', main;
       Key = 'f', matrixViewLoop(NewMat);
-      Key = 's', patternSelect;
+      Key = 's', patternSelect(Mat);
       Key = 'c', screenSize(W, H), createEmptyMatrix(W, H, EmpMat), matrixViewLoop(EmpMat);
       matrixViewLoop(Mat)).
 
